@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FertiCafé</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f5f1ea;
+    --fg: #1a1a1a;
+    --accent: #2f5e3a;
+    --border: #d8d2c7;
+    --muted: #6b655b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Manrope', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  section {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-of-type { border-bottom: none; }
+
+  h1, h2, h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  h1 { font-size: 36px; margin-bottom: 16px; }
+  h2 { font-size: 24px; margin-bottom: 16px; }
+  h3 { font-size: 18px; margin-bottom: 8px; }
+
+  p { margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  .muted { color: var(--muted); font-size: 14px; }
+
+  .img-box {
+    background: #e8e2d8;
+    border: 1px solid var(--border);
+    aspect-ratio: 4/5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: monospace;
+    text-align: center;
+    padding: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+
+  .img-box img, .img-box video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .img-box.wide { aspect-ratio: 16/9; }
+
+  .btn-wa {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px 20px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    border: 1px solid var(--accent);
+    margin-top: 20px;
+  }
+
+  .btn-wa:hover { opacity: 0.9; }
+
+  .btn-link {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 12px;
+  }
+
+  .fixed-wa {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 720px;
+    background: var(--bg);
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    z-index: 10;
+  }
+
+  .fixed-wa .btn-wa { margin: 0; }
+
+  .friccion {
+    margin-bottom: 24px;
+  }
+
+  .friccion:last-child { margin-bottom: 0; }
+
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .bento .img-box { margin: 0; aspect-ratio: 1/1; }
+
+  .carousel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .slide {
+    flex: 0 0 75%;
+    scroll-snap-align: start;
+  }
+
+  .slide .img-box { aspect-ratio: 4/5; margin: 0 0 8px; }
+
+  .slide p { font-size: 14px; }
+
+  .ficha {
+    font-size: 14px;
+  }
+
+  .ficha dt {
+    font-weight: 600;
+    margin-top: 12px;
+  }
+
+  .ficha dt:first-child { margin-top: 0; }
+
+  .ficha dd {
+    color: var(--muted);
+    margin-left: 0;
+  }
+
+  ul { padding-left: 18px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+  <!-- 1. Inicio -->
+  <section>
+    <h1>FertiCafé te dice cuánto y qué fertilizante aplicar, sin análisis de suelo.</h1>
+    <p class="muted">Para el caficultor que no tiene análisis de suelo.</p>
+    <div class="img-box" id="hero">
+      <img src="img/hero.jpg" alt="hero.jpg" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='hero.jpg'">
+    </div>
+    <a class="btn-wa" href="https://wa.me/573234505069?text=Hola,%20quiero%20calcular%20el%20abono%20de%20mi%20lote%20de%20café" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+  </section>
+
+  <!-- 2. El problema -->
+  <section>
+    <h2>El problema</h2>
+    <p>"No sé cuánto fertilizante le debo poner a mis plantas porque no tengo análisis de suelo y no sé cuál abono me sale más barato."</p>
+
+    <div class="friccion">
+      <h3>Compra sin cantidad exacta</h3>
+      <p>Va a comprar fertilizante sin saber la cantidad exacta. Teme pasarse o quedarse corto.</p>
+    </div>
+
+    <div class="friccion">
+      <h3>Elección por confianza, no por precio</h3>
+      <p>Al elegir entre grados de abono compuesto, no sabe cuál le conviene. Se queda con la recomendación del vendedor.</p>
+    </div>
+
+    <div class="friccion">
+      <h3>Recordatorios de fertilización</h3>
+      <p>Se le olvida cuándo debe fertilizar cada lote. Aplica fuera de tiempo o deja de hacerlo.</p>
+    </div>
+  </section>
+
+  <!-- 3. La solución -->
+  <section>
+    <h2>La solución</h2>
+    <p>FertiCafé calcula la dosis exacta en gramos por planta y la cantidad de bultos de 50 kg necesarios.</p>
+    <p>Compara los costos de los grados compuestos y muestra cuál le sale más barato.</p>
+    <p>Genera un calendario de aplicaciones con recordatorios para cada lote.</p>
+
+    <div class="bento">
+      <div class="img-box"><img src="img/captura-1.jpg" alt="captura-1.jpg" onerror="this.style.display='none'; this.parentElement.textContent='captura-1.jpg'"></div>
+      <div class="img-box"><img src="img/captura-2.jpg" alt="captura-2.jpg" onerror="this.style.display='none'; this.parentElement.textContent='captura-2.jpg'"></div>
+      <div class="img-box"><img src="img/captura-3.jpg" alt="captura-3.jpg" onerror="this.style.display='none'; this.parentElement.textContent='captura-3.jpg'"></div>
+      <div class="img-box"><img src="img/producto.jpg" alt="producto.jpg" onerror="this.style.display='none'; this.parentElement.textContent='producto.jpg'"></div>
+    </div>
+
+    <div class="img-box wide">
+      <video src="img/clip.mp4" muted loop playsinline controls preload="metadata" style="width:100%"></video>
+    </div>
+
+    <div class="img-box">
+      <img src="img/fertilizando.jpg" alt="fertilizando.jpg" onerror="this.style.display='none'; this.parentElement.textContent='fertilizando.jpg'">
+    </div>
+
+    <div class="img-box wide">
+      <video src="img/clip-fertilizando.mp4" muted loop playsinline controls preload="metadata" style="width:100%"></video>
+    </div>
+
+    <a class="btn-link" href="file:///C:/OCTAVO/Diplomado%20caf%C3%A9/nuevo%20hoy%2019/kit-estudiante/kit-estudiante/app/FertiCafe%20(2).html" target="_blank" rel="noopener">Abrir la app</a>
+  </section>
+
+  <!-- 4. Prueba -->
+  <section>
+    <h2>Prueba</h2>
+    <ul>
+      <li>Recomendaciones de Cenicafé: AT 423 (levante), BT 32 (zoca) y AT 424 (producción, con ajuste por densidad y sombrío).</li>
+      <li>En levante, el plan por planta aporta 58 g de N, 15 de P2O5, 15 de K2O y 4 de MgO, frente a los 58, 15, 15 y 5 de la Tabla 1 de Cenicafé.</li>
+      <li>El usuario escribe: finca, lote, área, densidad y fecha.</li>
+      <li>La app entrega: gramos por planta, bultos de 50 kg, costo del lote, cuál grado sale más barato, calendario con recordatorios e informe para imprimir.</li>
+      <li>Municipio: San Lorenzo, Nariño. Precios de abonos: 180 000 a 230 000 COP por bulto de 50 kg.</li>
+    </ul>
+    <p class="muted">[falta: resultados de las pruebas del grupo, cuántas se hicieron y cómo salieron]</p>
+  </section>
+
+  <!-- 5. En redes -->
+  <section>
+    <h2>En redes</h2>
+    <div class="carousel">
+      <div class="slide">
+        <div class="img-box"><img src="img/lamina-1.jpg" alt="lamina-1.jpg" onerror="this.style.display='none'; this.parentElement.textContent='lamina-1.jpg'"></div>
+        <p>FertiCafé: fertiliza sin análisis de suelo. (1/6)</p>
+      </div>
+      <div class="slide">
+        <div class="img-box"><img src="img/lamina-2.jpg" alt="lamina-2.jpg" onerror="this.style.display='none'; this.parentElement.textContent='lamina-2.jpg'"></div>
+        <p>Solo el 5% hace análisis de suelo. El resto fertiliza a ojo. (2/6)</p>
+      </div>
+      <div class="slide">
+        <div class="img-box"><img src="img/lamina-3.jpg" alt="lamina-3.jpg" onerror="this.style.display='none'; this.parentElement.textContent='lamina-3.jpg'"></div>
+        <p>¿Cuánto comprar? FertiCafé calcula gramos por planta y bultos de 50 kg. (3/6)</p>
+      </div>
+      <div class="slide">
+        <div class="img-box"><img src="img/lamina-4.jpg" alt="lamina-4.jpg" onerror="this.style.display='none'; this.parentElement.textContent='lamina-4.jpg'"></div>
+        <p>¿Cuál abono? Compara grados compuestos y muestra el más barato. (4/6)</p>
+      </div>
+      <div class="slide">
+        <div class="img-box"><img src="img/lamina-5.jpg" alt="lamina-5.jpg" onerror="this.style.display='none'; this.parentElement.textContent='lamina-5.jpg'"></div>
+        <p>¿Cuándo fertilizar? Calendario con recordatorios para cada lote. (5/6)</p>
+      </div>
+      <div class="slide">
+        <div class="img-box"><img src="img/lamina-6.jpg" alt="lamina-6.jpg" onerror="this.style.display='none'; this.parentElement.textContent='lamina-6.jpg'"></div>
+        <p>Escríbenos por WhatsApp y calcula el abono de tu lote. (6/6)</p>
+      </div>
+    </div>
+
+    <p style="margin-top:16px">FertiCafé te dice cuánto y qué fertilizante aplicar, sin análisis de suelo.</p>
+    <p>En mi finca de San Lorenzo nunca tuve análisis de suelo. Fertilizaba a ojo o repetía lo del año pasado. FertiCafé calcula la dosis exacta en gramos por planta, los bultos de 50 kg y cuál grado sale más barato.</p>
+    <p>También te da un calendario con recordatorios para cada lote.</p>
+    <p>Escríbeme por WhatsApp y pruébalo en tu finca.</p>
+    <p class="muted">#FertiCafé #CaféDeNariño #Fertilización #Caficultura #SanLorenzoNariño</p>
+  </section>
+
+  <!-- 6. Cierre -->
+  <section>
+    <h2>Cierre</h2>
+    <p>Calcula la dosis, elige el abono más barato y no olvides cuándo fertilizar.</p>
+    <a class="btn-wa" href="https://wa.me/573234505069?text=Hola,%20quiero%20probar%20FertiCafé" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+
+    <h3 style="margin-top:24px">Cómo se hizo</h3>
+    <dl class="ficha">
+      <dt>Integrantes</dt>
+      <dd>FERTICAFE</dd>
+      <dt>Herramientas de IA</dt>
+      <dd>[falta: IA para texto y código], Google Flow (imágenes y video), Polyfork (modelo 3D)</dd>
+      <dt>Skills y repositorios</dt>
+      <dd>customer-research (github.com/coreyhaines31/marketingskills), frontend-design (github.com/anthropics/skills), minimalist-ui (github.com/Leonxlnx/taste-skill-classics), ig-carousel, ig-caption, ig-human (github.com/Jakeschincariol/instagram-agent-skill), slopmonster (github.com/ItsssssJack/SlopMonster)</dd>
+      <dt>Prompt principal</dt>
+      <dd>Prompt 1 · Diagnóstico</dd>
+    </dl>
+  </section>
+
+  <div class="fixed-wa">
+    <a class="btn-wa" href="https://wa.me/573234505069?text=Hola,%20quiero%20probar%20FertiCafé" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+  </div>
+
+</body>
+</html>
