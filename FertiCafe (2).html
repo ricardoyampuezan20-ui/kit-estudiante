@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FertiCafé – Fertilización sin análisis de suelo</title>
+<style>
+  :root{
+    --verde:#2f5d3a; --verde2:#3f7a4d; --crema:#f4f1ea; --cafe:#6b4226; --ambar:#d98e04;
+    --rojo:#b3261e; --texto:#1f2a24; --borde:#ddd6c8; --tarjeta:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--crema);color:var(--texto);line-height:1.45}
+  header{background:linear-gradient(135deg,var(--verde),var(--verde2));color:#fff;padding:22px 20px}
+  header h1{margin:0;font-size:1.6rem}
+  header p{margin:6px 0 0;opacity:.9;font-size:.95rem}
+  main{max-width:880px;margin:0 auto;padding:18px;display:block}
+  main>section{margin-bottom:18px}
+  .logo{display:inline-block;width:46px;height:46px;vertical-align:middle;margin-right:10px}
+  .logo svg{width:100%;height:100%;display:block}
+  header h1{display:flex;align-items:center}
+  main>*{min-width:0}
+  .banner,.ficha,.kpis{overflow-wrap:anywhere}
+  .card{background:var(--tarjeta);border:1px solid var(--borde);border-radius:12px;padding:16px}
+  .card h2{margin:0 0 12px;font-size:1.05rem;color:var(--verde)}
+  h3{margin:16px 0 4px;font-size:.95rem;color:var(--cafe)}
+  label{display:block;font-size:.85rem;font-weight:600;margin:10px 0 4px}
+  input[type=number],input[type=text],input[type=date]{width:100%;padding:9px 10px;border:1px solid var(--borde);border-radius:8px;font-size:1rem;font-family:inherit}
+  input:focus{outline:2px solid var(--verde2);border-color:var(--verde2)}
+  .hint{font-size:.75rem;color:#6a736d;font-weight:400}
+  .check{display:flex;gap:8px;align-items:center;margin-top:12px;font-weight:600;font-size:.88rem}
+  .check input{width:auto}
+  details{margin-top:14px;border-top:1px dashed var(--borde);padding-top:10px}
+  summary{cursor:pointer;font-weight:600;font-size:.88rem;color:var(--cafe)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  button{border:0;border-radius:8px;padding:9px 12px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit}
+  .primario{background:var(--verde);color:#fff}
+  .sec{background:#ece6d8;color:var(--cafe)}
+  button:hover{filter:brightness(.95)}
+  .banner{border-radius:10px;padding:12px 14px;font-weight:600;margin-bottom:14px}
+  .ok{background:#e4f2e6;color:#1f5a2c;border:1px solid #bfe0c5}
+  .aviso{background:#fff4d9;color:#7a5200;border:1px solid #f0d58a}
+  .error{background:#fde8e6;color:var(--rojo);border:1px solid #f3b8b3}
+  .ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;background:var(--crema);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+  .ficha small{display:block;color:#5b655e;font-size:.72rem}
+  .ficha b{font-size:.92rem}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0 14px}
+  .kpi{background:var(--crema);border-radius:10px;padding:10px 12px}
+  .kpi small{display:block;color:#5b655e;font-size:.75rem}
+  .kpi b{font-size:1.25rem;color:var(--cafe)}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:6px}
+  th,td{padding:7px 8px;border-bottom:1px solid var(--borde);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  th{background:#f0ece1;color:#47503f;font-size:.78rem}
+  tr.mejor td{background:#eaf5ec;font-weight:600}
+  tr.nocubre td:first-child{color:var(--rojo)}
+  .tablewrap{overflow-x:auto}
+  .tag{display:inline-block;font-size:.68rem;padding:1px 6px;border-radius:99px;margin-left:6px;font-weight:700}
+  .tag.g{background:#2f5d3a;color:#fff}
+  .tag.r{background:#fde8e6;color:var(--rojo)}
+  ul.notas{margin:6px 0 0;padding-left:18px;font-size:.85rem}
+  ul.notas li{margin:4px 0}
+  .grados th,.grados td{padding:4px 3px;font-size:.78rem}
+  .grados input[type=number]{padding:5px 4px;font-size:.8rem}
+  .grados input[type=text]{padding:5px 4px;font-size:.8rem}
+  footer{max-width:1250px;margin:0 auto;padding:0 18px 24px;font-size:.78rem;color:#6a736d}
+  .lotes{list-style:none;margin:8px 0 0;padding:0;font-size:.82rem}
+  .lotes li{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--borde)}
+  .lotes button{padding:4px 8px;font-size:.75rem}
+  a.cal{color:var(--verde);font-weight:600;text-decoration:none;font-size:.8rem;white-space:nowrap}
+  .msg{font-size:.78rem;color:#5b655e;margin-top:6px}
+  [hidden]{display:none!important}
+  .aclara{background:#fff4d9;color:#7a5200;padding:8px 20px;font-size:.82rem;border-bottom:1px solid #f0d58a}
+  .etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}
+  .et{position:relative;display:block;margin:0;font-weight:400}
+  .et input{position:absolute;opacity:0;width:1px;height:1px}
+  .et span{display:block;text-align:center;padding:9px 4px;border:1px solid var(--borde);border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;background:#fff;color:var(--cafe)}
+  .et small{display:block;font-weight:400;font-size:.7rem;color:#6a736d}
+  .et input:checked+span{background:var(--verde);color:#fff;border-color:var(--verde)}
+  .et input:checked+span small{color:#e4f2e6}
+  .et input:focus-visible+span{outline:2px solid var(--ambar)}
+  .perfilTop{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#f4f1ea,#fff4d9);border:1px solid var(--borde);border-radius:12px;padding:12px 14px;margin-bottom:6px}
+  .perfilTop h2{margin:0!important}
+  .avatar{width:48px;height:48px;border-radius:50%;background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;flex:none;border:3px solid #fff;box-shadow:0 0 0 2px var(--ambar)}
+  .perfilTop .logo{margin:0 0 0 auto;flex:none}
+  .ic{position:relative}
+  .ic svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--verde2);pointer-events:none}
+  .ic input[type=text]{padding-left:34px}
+  h3.lotesT{margin:14px 0 0}
+  .final{border-top:1px dashed var(--borde);margin-top:18px;padding-top:4px}
+  @media print{
+    header p,.noprint,footer .noprint{display:none!important}
+    body{background:#fff}
+    main{padding:0}
+    .card{border:0;padding:0}
+    input[type=radio]{display:none}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1><span id="logoHdr" class="logo"></span>FertiCafé</h1>
+  <p>Plan de fertilización para café <b>sin análisis de suelo</b>: levante, zoca y producción.</p>
+</header>
+<div class="aclara noprint"><b>Aclaración:</b> todos los datos de esta herramienta son <b>recomendaciones generales de Cenicafé</b> (Avance Técnico 423 para levante, Boletín Técnico 32 para zoca y Avance Técnico 424 para producción). No reemplazan el análisis de suelo.</div>
+
+<main>
+  <section class="card noprint" id="panelPerfil">
+    <div class="perfilTop">
+      <div class="avatar" id="avatar" aria-hidden="true">☕</div>
+      <div><h2>Mi perfil</h2><div class="hint">Guarda tu nombre y tu Gmail para los recordatorios.</div></div>
+      <span class="logo" id="logoPerfil"></span>
+    </div>
+    <div class="row2">
+      <div><label for="uNombre">Mi nombre</label><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><input type="text" id="uNombre" data-perfil="1" maxlength="60" placeholder="Tu nombre"></div></div>
+      <div><label for="uCorreo">Mi Gmail</label><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><input type="text" id="uCorreo" data-perfil="1" maxlength="80" placeholder="tucorreo@gmail.com" inputmode="email"></div></div>
+    </div>
+    <div class="btns">
+      <button class="sec" id="btnPerfil">💾 Guardar perfil</button>
+      <button class="sec" id="btnGuardarLote">📍 Guardar este lote</button>
+    </div>
+    <div class="msg" id="perfilMsg">Tu perfil y tus lotes se guardan solo en este navegador.</div>
+    <h3 class="lotesT">📍 Mis lotes guardados</h3>
+    <ul class="lotes" id="listaLotes"></ul>
+  </section>
+
+  <section class="card noprint" id="panelDatos">
+    <h2>🌿 ¿En qué etapa está el cafetal?</h2>
+    <div class="etapas">
+      <label class="et"><input type="radio" name="etapa" id="etLevante" value="levante"><span>🌱 Levante<small>hasta 1.ª cosecha</small></span></label>
+      <label class="et"><input type="radio" name="etapa" id="etZoca" value="zoca"><span>✂️ Zoca<small>renovación</small></span></label>
+      <label class="et"><input type="radio" name="etapa" id="etProd" value="produccion" checked><span>☕ Producción<small>cafetal adulto</small></span></label>
+    </div>
+    <div class="msg" id="etapaMsg"></div>
+
+    <h2 style="margin-top:16px">🏡 Datos de la finca y el lote</h2>
+
+    <label for="finca">Nombre de la finca</label>
+    <input type="text" id="finca" maxlength="80" placeholder="p. ej. La Esperanza">
+
+    <div class="row2">
+      <div><label for="lote">Lote</label><input type="text" id="lote" maxlength="40" placeholder="Lote 1"></div>
+      <div><label for="prop">Propietario</label><input type="text" id="prop" maxlength="80"></div>
+    </div>
+    <label for="muni">Municipio / vereda</label>
+    <input type="text" id="muni" maxlength="80">
+
+    <label for="fApp" id="lblFecha">Día de la aplicación <span class="hint">(las siguientes fechas se calculan solas)</span></label>
+    <input type="date" id="fApp">
+
+    <label for="area">Área del lote (ha) <span class="hint">p. ej. 1.5</span></label>
+    <input type="number" id="area" step="0.01" value="1">
+
+    <label for="dens">Densidad de siembra (plantas/ha) <span class="hint" id="hintDens">criterio base: 7.500–10.000</span></label>
+    <input type="number" id="dens" step="1" value="7500">
+
+    <div data-et="zoca" hidden>
+      <h3 style="margin:14px 0 2px;font-size:.9rem;color:var(--cafe)">Dosis por planta para zoca (g/planta)</h3>
+      <p class="hint" style="margin:0 0 4px">Según las recomendaciones generales de Cenicafé (Boletín Técnico 32), como las indicó el grupo. Puedes cambiarlas.</p>
+      <div class="row2">
+        <div><label for="zUrea2">Urea a los 2 meses</label><input type="number" id="zUrea2" step="0.5" value="30"></div>
+        <div><label for="zUrea6">Urea a los 6 meses</label><input type="number" id="zUrea6" step="0.5" value="30"></div>
+        <div><label for="zDap6">DAP a los 6 meses</label><input type="number" id="zDap6" step="0.5" value="10"></div>
+        <div><label for="zKcl6">Cloruro de potasio a los 6 meses</label><input type="number" id="zKcl6" step="0.5" value="20"></div>
+      </div>
+    </div>
+
+    <div data-et="produccion">
+      <label for="sombra">Sombrío (%) <span class="hint">0 = libre exposición</span></label>
+      <input type="number" id="sombra" step="1" value="20">
+
+      <label for="apps">Aplicaciones por año</label>
+      <input type="number" id="apps" step="1" min="1" max="6" value="2">
+    </div>
+
+    <div class="check" data-et="produccion levante"><input type="checkbox" id="mgs" checked><label for="mgs" id="lblMgs" style="margin:0">Incluir Mg y S (kieserita / grado con Mg)</label></div>
+    <div class="check" data-et="produccion"><input type="checkbox" id="soloGrados" checked><label for="soloGrados" style="margin:0">Recomendar solo entre los grados compuestos</label></div>
+
+    <details>
+      <summary>Precios de fertilizantes simples (bulto 50 kg, COP)</summary>
+      <div class="row2">
+        <div><label for="pUrea">Urea</label><input type="number" id="pUrea" value="220000"></div>
+        <div><label for="pDap">DAP</label><input type="number" id="pDap" value="250000"></div>
+        <div><label for="pKcl">Cloruro de potasio</label><input type="number" id="pKcl" value="240000"></div>
+        <div data-et="produccion"><label for="pKie">Kieserita</label><input type="number" id="pKie" value="90000"></div>
+        <div data-et="levante" hidden><label for="pOxMg">Óxido de magnesio</label><input type="number" id="pOxMg" value="90000"></div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Composición de los simples (%)</summary>
+      <div class="row2">
+        <div><label for="cUreaN">Urea – N</label><input type="number" id="cUreaN" value="46"></div>
+        <div><label for="cDapN">DAP – N</label><input type="number" id="cDapN" value="18"></div>
+        <div><label for="cDapP">DAP – P₂O₅</label><input type="number" id="cDapP" value="46"></div>
+        <div><label for="cKclK">KCl – K₂O</label><input type="number" id="cKclK" value="60"></div>
+        <div data-et="produccion"><label for="cKieMg">Kieserita – MgO</label><input type="number" id="cKieMg" value="25"></div>
+        <div data-et="produccion"><label for="cKieS">Kieserita – S</label><input type="number" id="cKieS" value="20"></div>
+      </div>
+      <p class="hint">Valores típicos; cámbialos si tu producto trae otra garantía en la etiqueta.</p>
+    </details>
+
+    <details open data-et="produccion levante">
+      <summary>Fertilizantes compuestos (grados) a comparar</summary>
+      <p class="hint">Grado = % de N – P₂O₅ – K₂O – MgO – S. Marca los que quieres comparar y ajusta el precio si cambia en el almacén. Los grados de cinco números se leyeron como N – P₂O₅ – K₂O – MgO – S (verifícalo en la etiqueta). Si usas el grado personalizado, escribe su precio.</p>
+      <div class="tablewrap"><table class="grados" id="gradosTabla"></table></div>
+      <details style="margin-top:8px">
+        <summary>Editar composición de cada grado</summary>
+        <p class="hint">N – P₂O₅ – K₂O – MgO – S, en %.</p>
+        <div class="tablewrap"><table class="grados" id="composTabla"></table></div>
+      </details>
+    </details>
+
+    <div class="btns">
+      <button class="primario" id="btnCalc">Calcular</button>
+    </div>
+  </section>
+
+  <section class="card" id="resultados" hidden>
+    <h2>Recomendación</h2>
+    <div id="salida"></div>
+    <div class="final noprint">
+      <h3>Guardar o compartir</h3>
+      <div class="btns" style="margin-top:6px">
+        <button class="sec" id="btnPrint">🖨️ Imprimir informe</button>
+        <button class="sec" id="btnInforme">⬇️ Descargar informe</button>
+        <button class="sec" id="btnCopy">📋 Copiar resumen</button>
+        <button class="sec" id="btnIcs">📅 Calendario (.ics)</button>
+        <button class="sec" id="btnGmail">✉️ Enviar a mi Gmail</button>
+      </div>
+      <div id="copyMsg" class="hint" style="margin-top:6px"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Herramienta de apoyo educativo. La recomendación es una <b>referencia general</b>; para ajustar a las necesidades reales del lote se recomienda un análisis de suelo y apoyo técnico.
+</footer>
+
+<script>
+//#CALC-START
+const BASE = { N: 300, K2O: 260, P2O5: 50, MgO: 50, S: 50 }; // kg/ha/año, criterio base
+// Requerimientos con menos de 35 % de sombra, según densidad (diapositiva "Requerimientos: N, K, P, Mg y S")
+const TABLA_REQ = {
+  alta:  { N: 300, K2O: 260, P2O5: 50, MgO: 50, S: 50 }, // más de 7.500 plantas/ha
+  media: { N: 285, K2O: 250, P2O5: 48, MgO: 48, S: 48 }, // 5.000–7.500
+  baja:  { N: 255, K2O: 220, P2O5: 43, MgO: 43, S: 43 }  // menos de 5.000
+};
+const NUTR = ["N", "P2O5", "K2O", "MgO", "S"];
+const CRITICOS = ["N", "P2O5", "K2O", "MgO"]; // los que deben quedar cubiertos
+const COBERTURA_MIN = 0.95;
+
+// Levante: Cenicafé, Avance Técnico 423, Tabla 2 (g de fertilizante por planta, a los 2, 6, 10, 14 y 18 meses después de la siembra)
+const NOTA_PLATO = "<b>Dónde aplicar:</b> en el plato del árbol, es decir, el área limpia de arvenses alrededor del tallo, bajo la copa. Esparce el abono ahí, sin dejarlo pegado al tallo y con el suelo húmedo.";
+const MGO_OXIDO = 88; // % de MgO del óxido de magnesio
+const LEVANTE = {
+  meses: [2, 6, 10, 14, 18],
+  urea: [12, 20, 22, 30, 30], dap: [9, 0, 11, 0, 13], kcl: [0, 0, 8, 0, 17], oxMg: [0, 0, 2, 0, 3],
+  nutr: { N: 58, P2O5: 15, K2O: 15, MgO: 5 } // Tabla 1 (g/planta en los 18 meses)
+};
+const ZOCA_MESES = [2, 6]; // meses después de la zoca
+
+// Plan por planta: calcula g por aplicación, nutrientes aportados, compra y costo del lote
+function planPlanta(p, meses, dosis) {
+  const c = p.comp, pr = p.precio, plantas = p.dens * p.area;
+  const filas = meses.map((m, i) => {
+    const u = dosis.urea[i] || 0, d = dosis.dap[i] || 0, k = dosis.kcl[i] || 0, mg = dosis.oxMg[i] || 0;
+    return { mes: m, urea: u, dap: d, kcl: k, oxMg: mg, total: u + d + k + mg,
+      N: u * c.ureaN / 100 + d * c.dapN / 100, P2O5: d * c.dapP / 100, K2O: k * c.kclK / 100, MgO: mg * MGO_OXIDO / 100 };
+  });
+  const sum = k => filas.reduce((a, f) => a + f[k], 0);
+  const tot = { urea: sum("urea"), dap: sum("dap"), kcl: sum("kcl"), oxMg: sum("oxMg"), total: sum("total"), N: sum("N"), P2O5: sum("P2O5"), K2O: sum("K2O"), MgO: sum("MgO") };
+  const prods = [
+    { nombre: "Urea (46 % N)", gPlanta: tot.urea, precio: pr.urea },
+    { nombre: "DAP (18-46-0)", gPlanta: tot.dap, precio: pr.dap },
+    { nombre: "Cloruro de potasio (KCl)", gPlanta: tot.kcl, precio: pr.kcl },
+    { nombre: "Óxido de magnesio (aplicar aparte)", gPlanta: tot.oxMg, precio: pr.oxmg }
+  ].filter(x => x.gPlanta > 0);
+  prods.forEach(x => { x.kgLote = x.gPlanta * plantas / 1000; x.bultos = x.kgLote / 50; x.costo = (x.precio / 50) * x.kgLote; });
+  const costoLote = prods.reduce((a, x) => a + x.costo, 0);
+  return { filas: filas, tot: tot, prods: prods, plantas: plantas, costoLote: costoLote, costoPlanta: costoLote / plantas };
+}
+function planDe(p, et) {
+  if (et === "levante") {
+    return planPlanta(p, LEVANTE.meses, { urea: LEVANTE.urea, dap: LEVANTE.dap, kcl: LEVANTE.kcl, oxMg: p.mgs ? LEVANTE.oxMg : [0, 0, 0, 0, 0] });
+  }
+  const z = p.zoca;
+  return planPlanta(p, ZOCA_MESES, { urea: [z.urea2, z.urea6], dap: [0, z.dap6], kcl: [0, z.kcl6], oxMg: [0, 0] });
+}
+function sumaMeses(iso, n) {
+  const a = iso.split("-").map(Number);
+  const dias = new Date(a[0], a[1] - 1 + n + 1, 0).getDate();
+  return new Date(a[0], a[1] - 1 + n, Math.min(a[2], dias));
+}
+
+function factorAjuste(sombra, dens) {
+  // Tabla "Ajuste por densidad y sombrío" (Cenicafé)
+  if (sombra > 55) return { f: 0, regla: "Más de 55 % de sombra: no se justifica fertilizar por la baja producción esperada.", supuesto: false };
+  if (sombra > 45) return { f: 0.5, regla: "45–55 % de sombra: 50 % del criterio base.", supuesto: false };
+  if (sombra >= 35) {
+    if (dens >= 5000) {
+      return { f: 0.85, regla: "35–45 % de sombra con 5.000 o más plantas/ha: 85 % del criterio base.", supuesto: dens > 7500 };
+    }
+    return { f: 0.75, regla: "35–45 % de sombra con menos de 5.000 plantas/ha: 75 % del criterio base.", supuesto: false };
+  }
+  if (dens >= 7500) return { f: 1, tabla: TABLA_REQ.alta, regla: "Menos de 35 % de sombra con más de 7.500 plantas/ha: criterio base completo (N 300, K₂O 260, P₂O₅, MgO y S 50 kg/ha/año).", supuesto: false };
+  if (dens >= 5000) return { f: 0.95, tabla: TABLA_REQ.media, regla: "Menos de 35 % de sombra con 5.000–7.500 plantas/ha: N 285, K₂O 250, P₂O₅, MgO y S 48 kg/ha/año.", supuesto: false };
+  return { f: 0.85, tabla: TABLA_REQ.baja, regla: "Menos de 35 % de sombra con menos de 5.000 plantas/ha: N 255, K₂O 220, P₂O₅, MgO y S 43 kg/ha/año.", supuesto: false };
+}
+
+function requerimientos(p, f, tabla) {
+  // Con menos de 35 % de sombra se usan los valores exactos de la tabla; en los otros rangos, el % del criterio base
+  const t = tabla || { N: BASE.N * f, P2O5: BASE.P2O5 * f, K2O: BASE.K2O * f, MgO: BASE.MgO * f, S: BASE.S * f };
+  return { N: t.N, P2O5: t.P2O5, K2O: t.K2O, MgO: p.mgs ? t.MgO : 0, S: p.mgs ? t.S : 0 };
+}
+
+// Convierte una lista de productos en una "opción" con costos, aportes y cobertura
+function armar(p, req, id, nombre, tipo, prods) {
+  prods = prods.filter(x => x.kgHa > 1e-9);
+  prods.forEach(x => {
+    x.kgLote = x.kgHa * p.area;
+    x.bultos = x.kgLote / 50;
+    x.gPlanta = x.kgHa * 1000 / p.dens;
+    x.gAplic = x.gPlanta / p.apps;
+    x.costoLote = (x.precio / 50) * x.kgLote;
+  });
+  const aporte = {}, cobertura = {};
+  NUTR.forEach(n => { aporte[n] = prods.reduce((a, x) => a + x.kgHa * ((x.frac && x.frac[n]) || 0), 0); });
+  NUTR.forEach(n => { cobertura[n] = req[n] > 0 ? aporte[n] / req[n] : 1; });
+  const minCob = Math.min(...CRITICOS.map(n => cobertura[n]));
+  const sobrante = NUTR.reduce((a, n) => a + Math.max(0, aporte[n] - req[n]), 0);
+  const mezclaKgHa = prods.filter(x => x.mezcla).reduce((a, x) => a + x.kgHa, 0);
+  const costoLote = prods.reduce((a, x) => a + x.costoLote, 0);
+  return {
+    id, nombre, tipo, prods, req, aporte, cobertura, minCob, sobrante,
+    ok: minCob >= COBERTURA_MIN - 1e-9,
+    kgHaTotal: prods.reduce((a, x) => a + x.kgHa, 0),
+    mezclaKgHa,
+    mezclaGPlanta: mezclaKgHa * 1000 / p.dens,
+    mezclaGAplic: mezclaKgHa * 1000 / p.dens / p.apps,
+    costoLote, costoHa: costoLote / p.area, costoPlanta: costoLote / (p.dens * p.area)
+  };
+}
+
+function opcionSimples(p, req) {
+  const c = p.comp, pr = p.precio;
+  const dap = req.P2O5 / (c.dapP / 100);
+  const nDap = dap * (c.dapN / 100);
+  const urea = Math.max(0, req.N - nDap) / (c.ureaN / 100);
+  const kcl = req.K2O / (c.kclK / 100);
+  const kie = req.MgO > 0 ? req.MgO / (c.kieMg / 100) : 0;
+  return armar(p, req, "simples", "Mezcla de simples (urea + DAP + KCl + kieserita)", "simples", [
+    { nombre: "Urea (46 % N)", kgHa: urea, precio: pr.urea, mezcla: true, frac: { N: c.ureaN / 100 } },
+    { nombre: "DAP (18-46-0)", kgHa: dap, precio: pr.dap, mezcla: true, frac: { N: c.dapN / 100, P2O5: c.dapP / 100 } },
+    { nombre: "Cloruro de potasio", kgHa: kcl, precio: pr.kcl, mezcla: true, frac: { K2O: c.kclK / 100 } },
+    { nombre: "Kieserita (aplicar aparte)", kgHa: kie, precio: pr.kie, mezcla: false, frac: { MgO: c.kieMg / 100, S: c.kieS / 100 } }
+  ]);
+}
+
+// Grado compuesto: la dosis se calcula para cubrir el N; K y Mg que falten se completan con simples
+function opcionGrado(p, req, g) {
+  const c = p.comp, pr = p.precio;
+  const fr = { N: g.N / 100, P2O5: g.P2O5 / 100, K2O: g.K2O / 100, MgO: g.MgO / 100, S: g.S / 100 };
+  const dosis = req.N / fr.N;
+  const kSobra = req.K2O - dosis * fr.K2O;
+  const kcl = kSobra > 0 ? kSobra / (c.kclK / 100) : 0;
+  const mgFalta = req.MgO - dosis * fr.MgO;
+  const kie = mgFalta > 0 ? mgFalta / (c.kieMg / 100) : 0;
+  return armar(p, req, g.id, "Grado " + g.nombre + " + complementos", "grado", [
+    { nombre: "Grado " + g.nombre, kgHa: dosis, precio: g.precio, mezcla: true, frac: fr },
+    { nombre: "Cloruro de potasio (complemento)", kgHa: kcl, precio: pr.kcl, mezcla: true, frac: { K2O: c.kclK / 100 } },
+    { nombre: "Kieserita (complemento, aparte)", kgHa: kie, precio: pr.kie, mezcla: false, frac: { MgO: c.kieMg / 100, S: c.kieS / 100 } }
+  ]);
+}
+
+function comparar(p, f, tabla) {
+  const req = requerimientos(p, f, tabla);
+  const opciones = [opcionSimples(p, req)].concat(p.grados.map(g => opcionGrado(p, req, g)));
+  opciones.sort((a, b) => a.costoLote - b.costoLote);
+  const pool = (p.soloGrados && p.grados.length) ? opciones.filter(o => o.tipo === "grado") : opciones;
+  const cubren = pool.filter(o => o.ok);
+  const mejor = cubren.length ? cubren[0] : pool[0];
+  return { req, opciones, pool, mejor, hayQueCubra: cubren.length > 0 };
+}
+//#CALC-END
+
+const GRADOS_DEF = [
+  { id: "g0", nombre: "17-6-18-2", N: 17, P2O5: 6, K2O: 18, MgO: 2, S: 0, precio: 141846, usar: true },
+  { id: "g1", nombre: "20-3-18-2", N: 20, P2O5: 3, K2O: 18, MgO: 2, S: 0, precio: 161850, usar: true },
+  { id: "g2", nombre: "23-4-20-3-4", N: 23, P2O5: 4, K2O: 20, MgO: 3, S: 4, precio: 116287, usar: true },
+  { id: "g3", nombre: "25-3-19-3-4", N: 25, P2O5: 3, K2O: 19, MgO: 3, S: 4, precio: 123000, usar: true },
+  { id: "g4", nombre: "25-4-24", N: 25, P2O5: 4, K2O: 24, MgO: 0, S: 0, precio: 117770, usar: true },
+  { id: "g5", nombre: "26-4-22", N: 26, P2O5: 4, K2O: 22, MgO: 0, S: 0, precio: 120440, usar: true },
+  { id: "g6", nombre: "22-4-20-3-4", N: 22, P2O5: 4, K2O: 20, MgO: 3, S: 4, precio: 136676, usar: true },
+  { id: "g7", nombre: "26-4-23", N: 26, P2O5: 4, K2O: 23, MgO: 0, S: 0, precio: 117709, usar: true },
+  { id: "g8", nombre: "23-4-20-3-2", N: 23, P2O5: 4, K2O: 20, MgO: 3, S: 2, precio: 110924, usar: true },
+  { id: "g9", nombre: "Personalizado", N: 20, P2O5: 5, K2O: 20, MgO: 2, S: 0, precio: 0, usar: false }
+];
+
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 1) => Number(n).toLocaleString("es-CO", { maximumFractionDigits: d });
+const money = n => "$" + Math.round(n).toLocaleString("es-CO");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fechaLarga = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" }); };
+const hoyISO = () => { const t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); };
+
+let seleccion = null;      // opción elegida para ver el detalle
+let resumenTexto = "";
+let ultimo = null;      // datos del último cálculo, para el informe
+let eventos = [];       // aplicaciones del calendario
+
+function etapaActual() {
+  const r = document.querySelector('input[name="etapa"]:checked');
+  return r ? r.value : "produccion";
+}
+const TXT_ETAPA = {
+  produccion: { fecha: 'Día de la aplicación <span class="hint">(las siguientes fechas se calculan solas)</span>', dens: "criterio base: 7.500–10.000", mgs: "Incluir Mg y S (kieserita / grado con Mg)",
+    msg: "Cafetal adulto: criterio base de Cenicafé (Avance Técnico 424), ajustado por densidad y sombrío." },
+  levante: { fecha: 'Fecha de siembra <span class="hint">(los abonos se programan a los 2, 6, 10, 14 y 18 meses)</span>', dens: "para calcular el total de plantas del lote", mgs: "Incluir magnesio (óxido de Mg, desde los 10 meses)",
+    msg: "Desde el trasplante hasta antes de la primera cosecha: plan general de Cenicafé (Avance Técnico 423), en gramos por planta." },
+  zoca: { fecha: 'Fecha de la zoca <span class="hint">(los abonos se programan a los 2 y 6 meses)</span>', dens: "para calcular el total de plantas del lote", mgs: "",
+    msg: "Cafetal renovado por zoca: abonos a los 2 y 6 meses después de la zoca, en gramos por planta." }
+};
+function aplicarEtapa() {
+  const e = etapaActual(), t = TXT_ETAPA[e];
+  document.querySelectorAll("[data-et]").forEach(el => { el.hidden = el.dataset.et.split(" ").indexOf(e) < 0; });
+  $("lblFecha").innerHTML = t.fecha;
+  $("hintDens").textContent = t.dens;
+  if (t.mgs) $("lblMgs").textContent = t.mgs;
+  $("etapaMsg").textContent = t.msg;
+}
+
+function construirTablaGrados() {
+  let h = "<tr><th></th><th>Grado</th><th>Precio bulto 50 kg</th></tr>";
+  let c = "<tr><th>Grado</th><th>N</th><th>P₂O₅</th><th>K₂O</th><th>MgO</th><th>S</th></tr>";
+  GRADOS_DEF.forEach(g => {
+    h += "<tr>" +
+      '<td><input type="checkbox" id="' + g.id + 'use"' + (g.usar ? " checked" : "") + "></td>" +
+      '<td><input type="text" id="' + g.id + 'nom" value="' + g.nombre + '" maxlength="20" style="width:112px"></td>' +
+      '<td><input type="number" id="' + g.id + 'pr" value="' + g.precio + '" style="width:100px"></td></tr>';
+    c += '<tr><td><span data-lbl="' + g.id + '">' + g.nombre + "</span></td>" +
+      '<td><input type="number" id="' + g.id + 'N" value="' + g.N + '" style="width:48px"></td>' +
+      '<td><input type="number" id="' + g.id + 'P" value="' + g.P2O5 + '" style="width:48px"></td>' +
+      '<td><input type="number" id="' + g.id + 'K" value="' + g.K2O + '" style="width:48px"></td>' +
+      '<td><input type="number" id="' + g.id + 'M" value="' + g.MgO + '" style="width:48px"></td>' +
+      '<td><input type="number" id="' + g.id + 'S" value="' + g.S + '" style="width:48px"></td></tr>';
+  });
+  $("gradosTabla").innerHTML = h;
+  $("composTabla").innerHTML = c;
+}
+function actualizarEtiquetas() {
+  document.querySelectorAll("[data-lbl]").forEach(sp => { sp.textContent = $(sp.dataset.lbl + "nom").value.trim() || "Grado"; });
+}
+
+function leer() {
+  const errores = [];
+  function num(id, etiqueta, { min = 0, max = Infinity, mayorQueMin = false, entero = false } = {}) {
+    const raw = $(id).value.trim();
+    const v = Number(raw);
+    if (raw === "" || !isFinite(v)) { errores.push(etiqueta + ": escribe un número válido."); return NaN; }
+    if (mayorQueMin ? v <= min : v < min) { errores.push(etiqueta + ": debe ser " + (mayorQueMin ? "mayor que " : "mínimo ") + min + "."); return NaN; }
+    if (v > max) { errores.push(etiqueta + ": debe ser máximo " + max + "."); return NaN; }
+    if (entero && !Number.isInteger(v)) { errores.push(etiqueta + ": debe ser un número entero."); return NaN; }
+    return v;
+  }
+  const et = etapaActual(), esProd = et === "produccion";
+  const p = {
+    etapa: et,
+    finca: $("finca").value.trim(), lote: $("lote").value.trim(), prop: $("prop").value.trim(), muni: $("muni").value.trim(),
+    fApp: $("fApp").value,
+    area: num("area", "Área", { min: 0, mayorQueMin: true, max: 10000 }),
+    dens: num("dens", "Densidad", { min: 0, mayorQueMin: true, max: 40000 }),
+    sombra: esProd ? num("sombra", "Sombrío", { min: 0, max: 100 }) : 0,
+    apps: esProd ? num("apps", "Aplicaciones por año", { min: 1, max: 6, entero: true }) : 1,
+    mgs: $("mgs").checked,
+    soloGrados: $("soloGrados").checked,
+    precio: {
+      urea: num("pUrea", "Precio urea", { min: 0 }), dap: num("pDap", "Precio DAP", { min: 0 }),
+      kcl: num("pKcl", "Precio KCl", { min: 0 }), kie: num("pKie", "Precio kieserita", { min: 0 }),
+      oxmg: num("pOxMg", "Precio óxido de magnesio", { min: 0 })
+    },
+    comp: {
+      ureaN: num("cUreaN", "Urea N", { min: 0, mayorQueMin: true, max: 100 }),
+      dapN: num("cDapN", "DAP N", { min: 0, max: 100 }),
+      dapP: num("cDapP", "DAP P₂O₅", { min: 0, mayorQueMin: true, max: 100 }),
+      kclK: num("cKclK", "KCl K₂O", { min: 0, mayorQueMin: true, max: 100 }),
+      kieMg: num("cKieMg", "Kieserita MgO", { min: 0, mayorQueMin: true, max: 100 }),
+      kieS: num("cKieS", "Kieserita S", { min: 0, max: 100 })
+    },
+    grados: []
+  };
+  if (et === "zoca") {
+    p.zoca = { urea2: num("zUrea2", "Zoca – urea a los 2 meses", { min: 0, max: 500 }), urea6: num("zUrea6", "Zoca – urea a los 6 meses", { min: 0, max: 500 }),
+      dap6: num("zDap6", "Zoca – DAP a los 6 meses", { min: 0, max: 500 }), kcl6: num("zKcl6", "Zoca – cloruro de potasio a los 6 meses", { min: 0, max: 500 }) };
+  }
+  GRADOS_DEF.forEach(g => {
+    if (!(esProd || et === "levante") || !$(g.id + "use").checked) return;
+    const nombre = $(g.id + "nom").value.trim() || g.nombre;
+    const e = "Grado " + nombre;
+    const N = num(g.id + "N", e + " – N", { min: 0, mayorQueMin: true, max: 100 });
+    const P = num(g.id + "P", e + " – P₂O₅", { min: 0, max: 100 });
+    const K = num(g.id + "K", e + " – K₂O", { min: 0, max: 100 });
+    const M = num(g.id + "M", e + " – MgO", { min: 0, max: 100 });
+    const S = num(g.id + "S", e + " – S", { min: 0, max: 100 });
+    const pr = num(g.id + "pr", e + " – precio", { min: 0 });
+    if ([N, P, K, M, S].every(isFinite) && N + P + K + M + S > 100) errores.push(e + ": la suma de nutrientes no puede pasar de 100 %.");
+    p.grados.push({ id: g.id, nombre: nombre, N, P2O5: P, K2O: K, MgO: M, S, precio: pr });
+  });
+  return { p, errores };
+}
+
+function principal(o) {
+  const g = o.prods.find(x => x.nombre.indexOf("Grado ") === 0);
+  return o.tipo === "grado" && g ? g.kgHa : o.mezclaKgHa;
+}
+
+function render() {
+  eventos = [];
+  actualizarEtiquetas();
+  const e = etapaActual();
+  if (e === "produccion") renderProduccion(); else renderPlan(e);
+}
+
+function renderProduccion() {
+  const out = $("salida");
+  const { p, errores } = leer();
+  if (errores.length) {
+    resumenTexto = "";
+    ultimo = null;
+    out.innerHTML = '<div class="banner error">No se puede calcular. Corrige estos datos:<ul class="notas">' +
+      errores.map(e => "<li>" + esc(e) + "</li>").join("") + "</ul></div>";
+    return;
+  }
+
+  const aj = factorAjuste(p.sombra, p.dens);
+  let html = "";
+
+  // Ficha
+  const fi = [
+    ["Finca", p.finca || "—"], ["Lote", p.lote || "—"], ["Propietario", p.prop || "—"], ["Municipio / vereda", p.muni || "—"],
+    ["Día de la aplicación", p.fApp ? fechaLarga(p.fApp) : "—"],
+    ["Ingeniero asistente técnico", $("uNombre").value.trim() || "—"], ["Área · densidad · sombrío", fmt(p.area, 2) + " ha · " + fmt(p.dens, 0) + " pl/ha · " + fmt(p.sombra, 0) + " %"]
+  ];
+  html += '<div class="ficha">' + fi.map(x => "<div><small>" + x[0] + "</small><b>" + esc(x[1]) + "</b></div>").join("") + "</div>";
+
+  if (aj.f === 0) {
+    resumenTexto = "FertiCafé – " + (p.finca || "Finca") + ": con más de 55 % de sombrío no se justifica fertilizar (dosis 0).";
+    html += '<div class="banner aviso">' + aj.regla + " La dosis recomendada es 0 kg/ha.</div>";
+    out.innerHTML = html;
+    ultimo = { etapa: "produccion", p: p, aj: aj, cero: true };
+    return;
+  }
+
+  const cmp = comparar(p, aj.f, aj.tabla);
+  const full = comparar(p, 1, null);
+  let sel = cmp.opciones.find(o => o.id === seleccion) || cmp.mejor;
+  const mejor = cmp.mejor;
+  const segunda = cmp.pool.filter(o => o.ok && o !== mejor)[0];
+
+  html += '<div class="banner ' + (aj.f === 1 ? "ok" : "aviso") + '">' + (aj.tabla ? "" : "Factor de ajuste: " + Math.round(aj.f * 100) + " %. ") + aj.regla + "</div>";
+
+  // Comparación
+  html += "<h3>¿Con cuál me va mejor?</h3>";
+  let recTxt = "";
+  if (cmp.hayQueCubra) {
+    let txt = "Te conviene: <b>" + esc(mejor.nombre) + "</b>. Es la opción más barata (" + money(mejor.costoLote) + " en el lote) entre " + (p.soloGrados && p.grados.length ? "los grados compuestos" : "las opciones") + " que cubren al menos el " +
+      Math.round(COBERTURA_MIN * 100) + " % de N, P₂O₅, K₂O" + (p.mgs ? " y MgO" : "") + ".";
+    const gm = mejor.prods.find(x => x.nombre.indexOf("Grado ") === 0);
+    if (gm) txt += " Para tu lote compra " + fmt(gm.bultos, 1) + " bultos de 50 kg de este grado (" + fmt(gm.gAplic, 0) + " g por planta en cada aplicación).";
+    if (segunda) txt += " Frente a la siguiente opción que cubre, ahorras " + money(segunda.costoLote - mejor.costoLote) + ".";
+    recTxt = txt;
+    html += '<div class="banner ok">' + txt + "</div>";
+  } else {
+    recTxt = "Ninguna opción cubre el " + Math.round(COBERTURA_MIN * 100) + " % de todos los nutrientes. Se muestra la más barata (" + esc(mejor.nombre) + "); revisa los grados y precios.";
+    html += '<div class="banner aviso">' + recTxt + "</div>";
+  }
+  html += '<div class="tablewrap"><table><tr><th>Opción (toca para ver el detalle)</th><th>Grado / mezcla kg/ha</th><th>Bultos 50 kg/ha</th><th>Complementos kg/ha</th><th>Cubre (mín.)</th><th>Sobrante kg/ha</th><th>Costo/ha</th><th>Costo lote</th><th>Frente a la mejor</th></tr>';
+  cmp.opciones.forEach(o => {
+    const dif = o.costoLote - mejor.costoLote;
+    html += '<tr class="' + (o === mejor ? "mejor" : "") + (o.ok ? "" : " nocubre") + '"><td><label style="margin:0;font-weight:inherit;cursor:pointer"><input type="radio" name="sel" value="' + o.id + '"' +
+      (o === sel ? " checked" : "") + " style=\"width:auto\"> " + esc(o.nombre) +
+      (o === mejor ? '<span class="tag g">MEJOR</span>' : "") + (p.soloGrados && p.grados.length && o.tipo === "simples" ? '<span class="tag" style="background:#ece6d8;color:#6b4226">referencia</span>' : "") + (o.ok ? "" : '<span class="tag r">no cubre</span>') + "</label></td><td>" +
+      fmt(principal(o), 0) + "</td><td>" + fmt(principal(o) / 50, 1) + "</td><td>" + fmt(o.kgHaTotal - principal(o), 0) + "</td><td>" + Math.round(o.minCob * 100) + " %</td><td>" + fmt(o.sobrante, 0) + "</td><td>" + money(o.costoHa) + "</td><td>" + money(o.costoLote) +
+      "</td><td>" + (o === mejor ? "—" : "+" + money(dif)) + "</td></tr>";
+  });
+  html += "</table></div>";
+  html += '<p class="hint">"Grado / mezcla" es la dosis del fertilizante principal para cubrir el N; "Complementos" es el cloruro de potasio y la kieserita que completan K y Mg. "Cubre (mín.)" es el nutriente que queda más corto. "Sobrante" es lo que se aplica de más (kg/ha de nutrientes) y se paga sin que el cultivo lo pida.</p>';
+
+  // Detalle
+  html += "<h3 style='margin-top:20px'>Detalle: " + esc(sel.nombre) + "</h3>";
+  html += '<div class="kpis">' +
+    '<div class="kpi"><small>Mezcla granulada por planta / año</small><b>' + fmt(sel.mezclaGPlanta, 0) + " g</b></div>" +
+    '<div class="kpi"><small>Por planta en cada aplicación (' + p.apps + ")</small><b>" + fmt(sel.mezclaGAplic, 0) + " g</b></div>" +
+    '<div class="kpi"><small>Costo por hectárea / año</small><b>' + money(sel.costoHa) + "</b></div>" +
+    '<div class="kpi"><small>Costo del lote (' + fmt(p.area, 2) + " ha)</small><b>" + money(sel.costoLote) + "</b></div></div>";
+
+  html += "<h3>Nutrientes (kg/ha/año)</h3><div class=\"tablewrap\"><table><tr><th>Nutriente</th><th>Criterio base</th><th>Requerido para tu lote</th><th>Aportado</th><th>Cobertura</th></tr>";
+  [["N", "N"], ["P2O5", "P₂O₅"], ["K2O", "K₂O"], ["MgO", "MgO"], ["S", "S"]].forEach(([k, etq]) => {
+    const act = sel.req[k] > 0;
+    html += "<tr><td>" + etq + "</td><td>" + BASE[k] + "</td><td>" + (act ? fmt(sel.req[k]) : "—") + "</td><td>" + (act || sel.aporte[k] > 0 ? fmt(sel.aporte[k]) : "—") +
+      "</td><td>" + (act ? Math.round(sel.cobertura[k] * 100) + " %" : "—") + "</td></tr>";
+  });
+  html += "</table></div>";
+
+  html += "<h3>Productos a comprar y aplicar</h3><div class=\"tablewrap\"><table><tr><th>Producto</th><th>kg/ha</th><th>kg del lote</th><th>Bultos 50 kg</th><th>g/planta/año</th><th>g/planta/aplic.</th><th>Costo lote</th></tr>";
+  sel.prods.forEach(x => {
+    html += "<tr><td>" + esc(x.nombre) + "</td><td>" + fmt(x.kgHa) + "</td><td>" + fmt(x.kgLote) + "</td><td>" + fmt(x.bultos) + "</td><td>" +
+      fmt(x.gPlanta) + "</td><td>" + fmt(x.gAplic) + "</td><td>" + money(x.costoLote) + "</td></tr>";
+  });
+  html += "<tr><th>Mezcla granulada (sin kieserita)</th><th>" + fmt(sel.mezclaKgHa) + "</th><th>" + fmt(sel.mezclaKgHa * p.area) + "</th><th></th><th>" + fmt(sel.mezclaGPlanta) + "</th><th>" +
+    fmt(sel.mezclaGAplic) + "</th><th>" + money(sel.prods.filter(x => x.mezcla).reduce((a, x) => a + x.costoLote, 0)) + "</th></tr>" +
+    "<tr><th>Total del lote (con kieserita)</th><th>" + fmt(sel.kgHaTotal) + "</th><th>" + fmt(sel.kgHaTotal * p.area) + "</th><th>" + fmt(sel.kgHaTotal * p.area / 50) + "</th><th></th><th></th><th>" + money(sel.costoLote) + "</th></tr></table></div>";
+
+  // Calendario
+  let calTxt = "";
+  const calFilas = [];
+  if (p.fApp) {
+    const [y, m, d] = p.fApp.split("-").map(Number);
+    html += "<h3>Calendario de aplicaciones</h3><div class=\"tablewrap\"><table><tr><th>Aplicación</th><th>Fecha</th><th>Mezcla g/planta</th><th>Kieserita g/planta (aparte)</th><th>Recordatorio</th></tr>";
+    const kie = sel.prods.filter(x => !x.mezcla).reduce((a, x) => a + x.gAplic, 0);
+    for (let i = 0; i < p.apps; i++) {
+      const dt = new Date(y, m - 1, d + Math.round(i * 365 / p.apps));
+      const s = dt.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" });
+      const titulo = "FertiCafé: fertilizar " + (p.finca || "café") + (p.lote ? " – " + p.lote : "") + " (" + (i + 1) + " de " + p.apps + ")";
+      const detalle = "Aplicar por planta: " + fmt(sel.mezclaGAplic, 0) + " g de mezcla granulada" + (kie > 0 ? " y " + fmt(kie, 0) + " g de kieserita por separado" : "") + ". Aplicar en el plato del árbol con humedad en el suelo. Opción: " + sel.nombre + ".";
+      const ev = { fecha: dt, titulo: titulo, detalle: detalle };
+      eventos.push(ev);
+      calFilas.push({ n: (i + 1) + " de " + p.apps, fecha: s, mezcla: fmt(sel.mezclaGAplic, 0), kie: kie > 0 ? fmt(kie, 0) : "—" });
+      html += "<tr><td>" + (i + 1) + " de " + p.apps + "</td><td style='text-align:left'>" + s + "</td><td>" + fmt(sel.mezclaGAplic, 0) + "</td><td>" + (kie > 0 ? fmt(kie, 0) : "—") + "</td><td><a class=\"cal\" target=\"_blank\" rel=\"noopener\" href=\"" + urlCalendar(ev) + "\">+ Google Calendar</a></td></tr>";
+      calTxt += "  " + (i + 1) + ". " + s + ": " + fmt(sel.mezclaGAplic, 0) + " g de mezcla/planta" + (kie > 0 ? " + " + fmt(kie, 0) + " g de kieserita" : "") + "\n";
+    }
+    html += "</table></div><p class='hint'>Las fechas se reparten en partes iguales durante el año; ajústalas a la época de lluvias de tu zona.</p>";
+  }
+
+  // Ahorro por ajuste
+  const fullSel = full.opciones.find(o => o.id === sel.id);
+  if (aj.f < 1 && fullSel) {
+    html += '<div class="banner ok" style="margin-top:14px">Ajustar por densidad y sombrío ahorra <b>' + money(fullSel.costoLote - sel.costoLote) +
+      "</b> en este lote frente a aplicar el criterio base completo con esta misma opción (" + money(fullSel.costoLote) + ").</div>";
+  }
+
+  // Notas
+  const notas = [];
+  notas.push(NOTA_PLATO);
+  notas.push("Divide la dosis anual en " + p.apps + " aplicaciones" + (p.mgs ? ". La kieserita se aplica aparte de la mezcla." : "."));
+  if (sel.tipo === "simples") notas.push("Revuelve bien la mezcla de simples hasta que quede uniforme y aplícala el mismo día.");
+  if (sel.tipo === "grado") notas.push("El grado compuesto se dosificó para cubrir el N; el K y el Mg que faltaban se completaron con cloruro de potasio y kieserita.");
+  if (p.mgs && sel.req.S > 0 && sel.cobertura.S < 0.95) notas.push("El azufre queda en " + fmt(sel.aporte.S) + " de " + fmt(sel.req.S) + " kg/ha. Para completarlo usa otra fuente de azufre.");
+  if (aj.supuesto) notas.push("Cenicafé no trae el caso de 35–45 % de sombra con más de 7.500 plantas/ha: se usó 85 %, el valor del rango contiguo. Confírmalo con tu asistente técnico.");
+  html += "<h3>Notas</h3><ul class='notas'>" + notas.map(n => "<li>" + n + "</li>").join("") + "</ul>";
+
+  out.innerHTML = html;
+  ultimo = { etapa: "produccion", p: p, aj: aj, cmp: cmp, mejor: mejor, sel: sel, notas: notas, calFilas: calFilas, recTxt: recTxt, recOk: cmp.hayQueCubra,
+    ahorro: (aj.f < 1 && fullSel) ? fullSel.costoLote - sel.costoLote : 0 };
+
+  resumenTexto = "FertiCafé – " + (p.finca || "Finca") + (p.lote ? " – " + p.lote : "") + "\n" +
+    (p.fApp ? "Día de la aplicación: " + fechaLarga(p.fApp) + "\n" : "") +
+    fmt(p.area, 2) + " ha, " + fmt(p.dens, 0) + " plantas/ha, " + fmt(p.sombra, 0) + " % de sombrío. " + (aj.tabla ? "Criterio Cenicafé para menos de 35 % de sombra." : "Factor de ajuste: " + Math.round(aj.f * 100) + " %.") + "\n" +
+    "Mejor opción: " + mejor.nombre + " – " + money(mejor.costoLote) + " en el lote (" + money(mejor.costoHa) + "/ha).\n" +
+    "Opción detallada: " + sel.nombre + "\n" +
+    sel.prods.map(x => "  - " + x.nombre + ": " + fmt(x.kgHa) + " kg/ha, " + fmt(x.gPlanta) + " g/planta/año").join("\n") + "\n" +
+    "Mezcla por planta: " + fmt(sel.mezclaGPlanta, 0) + " g/año (" + fmt(sel.mezclaGAplic, 0) + " g por aplicación, " + p.apps + " aplicaciones).\n" +
+    (calTxt ? "Calendario:\n" + calTxt : "");
+}
+
+const fechaDe = dt => dt.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" });
+function descDosis(f) {
+  const t = [];
+  if (f.urea > 0) t.push(fmt(f.urea, 1) + " g de urea");
+  if (f.dap > 0) t.push(fmt(f.dap, 1) + " g de DAP");
+  if (f.kcl > 0) t.push(fmt(f.kcl, 1) + " g de cloruro de potasio");
+  if (f.oxMg > 0) t.push(fmt(f.oxMg, 1) + " g de óxido de magnesio (aparte)");
+  return t.length ? t.join(" + ") : "sin fertilizante";
+}
+const FUENTE_LEV = "Cenicafé, Avance Técnico 423: alternativas generales de fertilización para cafetales en la etapa de levante";
+const FUENTE_ZOCA = "Cenicafé, Boletín Técnico 32: Fertilidad del suelo y nutrición del café en Colombia (dosis para zoca indicadas por el grupo)";
+const MEZCLAS_LEV = [
+  ["2 meses", "20 g/planta de una mezcla urea:DAP en proporción 3:2", "—"],
+  ["6 meses", "20 g/planta de urea", "—"],
+  ["10 meses", "40 g/planta de una mezcla urea:DAP:KCl en proporción 3:1,5:1", "2 g/planta de óxido de magnesio, aplicado aparte"],
+  ["14 meses", "30 g/planta de urea", "—"],
+  ["18 meses", "60 g/planta de la mezcla urea:DAP:KCl en proporción 3:1:1,5", "3 g/planta de óxido de magnesio, aplicado aparte"]
+];
+const ALTERNAS_LEV = [
+  ["Con kieserita (Mg y S)", "10 meses: 50 g/planta de urea:DAP:KCl:kieserita en proporción 3:1,5:1:1 (6:3:2:2). 18 meses: 70 g/planta en proporción 2,5:1:1,5:1 (5:2:3:2)."],
+  ["Con Nitromag (Mg y N)", "10 meses: 55 g/planta de urea:DAP:KCl:Nitromag en proporción 1:1,5:1:3 (2:3:2:6). 18 meses: 80 g/planta en proporción 1:1:1,5:3,5 (2:2:3:7)."]
+];
+
+function notasPlan(p, et) {
+  const n = [NOTA_PLATO];
+  if (et === "levante") {
+    n.push("Aplica a los 2, 6, 10, 14 y 18 meses después de la siembra, siempre con el suelo húmedo.");
+    if (p.mgs) n.push("El óxido de magnesio se aplica aparte de la mezcla.");
+    n.push("Las dosis son aproximadas, como las da Cenicafé.");
+  } else {
+    n.push("Las dosis son las indicadas por el grupo (puedes cambiarlas arriba). El Boletín Técnico 32 da dosis que dependen del análisis de suelo: confirma cuáles usar.");
+    n.push("Después de 12 meses de la zoca, cambia a «Producción».");
+  }
+  return n;
+}
+
+// Levante sin abonos simples: compuestos en las aplicaciones con potasio (10 y 18 meses)
+function compuestosLevante(p, pl) {
+  if (!p.grados || !p.grados.length) return [];
+  const c = p.comp, pr = p.precio, plantas = pl.plantas;
+  const costoKg = (precio, g) => precio / 50 * g * plantas / 1000;
+  const costoSimples = pl.filas.reduce((a, f) => a + costoKg(pr.urea, f.urea) + costoKg(pr.dap, f.dap) + costoKg(pr.kcl, f.kcl) + costoKg(pr.oxmg, f.oxMg), 0);
+  const ops = p.grados.filter(g => g.K2O > 0 && g.N > 0).map(g => {
+    let costo = 0;
+    const filas = pl.filas.map(f => {
+      if (f.kcl <= 0) {
+        costo += costoKg(pr.urea, f.urea) + costoKg(pr.dap, f.dap) + costoKg(pr.oxmg, f.oxMg);
+        return { mes: f.mes, grado: 0, dap: f.dap, urea: f.urea, oxMg: f.oxMg, simple: true };
+      }
+      const gr = f.K2O / (g.K2O / 100);
+      const dap = Math.max(0, f.P2O5 - gr * g.P2O5 / 100) / (c.dapP / 100);
+      const urea = Math.max(0, f.N - gr * g.N / 100 - dap * c.dapN / 100) / (c.ureaN / 100);
+      const ox = Math.max(0, f.MgO - gr * g.MgO / 100) / (MGO_OXIDO / 100);
+      costo += costoKg(g.precio, gr) + costoKg(pr.urea, urea) + costoKg(pr.dap, dap) + costoKg(pr.oxmg, ox);
+      return { mes: f.mes, grado: gr, dap: dap, urea: urea, oxMg: ox, simple: false };
+    });
+    return { grado: g, filas: filas, costo: costo, dif: costo - costoSimples };
+  });
+  ops.sort((a, b) => a.costo - b.costo);
+  const dos = ops.slice(0, 2);
+  dos.forEach(o => { o.costoSimples = costoSimples; });
+  return dos;
+}
+function htmlCompuestos(u) {
+  const ops = u.comp || [];
+  if (!ops.length) return "";
+  const d = v => v > 0 ? fmt(v, 1) : "—";
+  let h = "<h3>¿No consigues los abonos simples? Usa un compuesto</h3>" +
+    "<p style='margin:2px 0 6px;font-size:.85rem'>Los compuestos solo sirven a los <b>10 y 18 meses</b>, cuando la planta necesita potasio. En las demás aplicaciones sigue usando urea y DAP.</p>";
+  ops.forEach((o, i) => {
+    const nom = o.grado.nombre;
+    h += "<p style='margin:10px 0 2px;font-weight:700'>" + (i === 0 ? "Recomendado: " : "Alternativa: ") + "compuesto " + esc(nom) + " · " + money(o.costo) + " en el plan " +
+      (Math.abs(o.dif) < 1 ? "(igual a la mezcla de simples)" : (o.dif > 0 ? "(" + money(o.dif) + " más que la mezcla de simples)" : "(" + money(-o.dif) + " menos que la mezcla de simples)")) + "</p>" +
+      "<div class=\"tablewrap\"><table><thead><tr><th>Aplicación</th><th>Compuesto " + esc(nom) + "</th><th>Urea</th><th>DAP</th>" + (u.p.mgs ? "<th>Óxido de Mg (aparte)</th>" : "") + "</tr></thead><tbody>" +
+      o.filas.map(f => "<tr><td>A los " + f.mes + " meses</td><td>" + d(f.grado) + "</td><td>" + d(f.urea) + "</td><td>" + d(f.dap) + "</td>" + (u.p.mgs ? "<td>" + d(f.oxMg) + "</td>" : "") + "</tr>").join("") + "</tbody></table></div>";
+  });
+  return h + "<p style='font-size:.78rem;color:#6a736d;margin:6px 0 0'>Dosis en g/planta. El compuesto se dosifica para cubrir el potasio; el fósforo, el nitrógeno y el magnesio que falten se completan con DAP, urea y óxido de magnesio.</p>";
+}
+
+function renderPlan(et) {
+  const out = $("salida");
+  const { p, errores } = leer();
+  if (errores.length) {
+    resumenTexto = "";
+    ultimo = null;
+    out.innerHTML = '<div class="banner error">No se puede calcular. Corrige estos datos:<ul class="notas">' + errores.map(e => "<li>" + esc(e) + "</li>").join("") + "</ul></div>";
+    return;
+  }
+  const esLev = et === "levante";
+  const pl = planDe(p, et);
+  const fuente = esLev ? FUENTE_LEV : FUENTE_ZOCA;
+  const etNombre = esLev ? "Levante" : "Zoca";
+  const calFilas = [];
+  if (p.fApp) {
+    pl.filas.forEach(f => {
+      const dt = sumaMeses(p.fApp, f.mes);
+      const ev = { fecha: dt, titulo: "FertiCafé: " + etNombre.toLowerCase() + " – abono a los " + f.mes + " meses (" + (p.finca || "café") + (p.lote ? " – " + p.lote : "") + ")",
+        detalle: "Aplicar por planta: " + descDosis(f) + ". Aplicar en el plato del árbol con humedad en el suelo. Recomendación general de Cenicafé (" + fuente + ")." };
+      eventos.push(ev);
+      calFilas.push({ mes: f.mes, fecha: fechaDe(dt), dosis: descDosis(f), ev: ev });
+    });
+  }
+  const hoyD = new Date(); hoyD.setHours(0, 0, 0, 0);
+  const proxima = calFilas.find(c => c.ev.fecha >= hoyD) || null;
+  const notas = notasPlan(p, et);
+  const comp = esLev ? compuestosLevante(p, pl) : [];
+
+  let html = "";
+  const fi = [["Finca", p.finca || "—"], ["Lote", p.lote || "—"], ["Propietario", p.prop || "—"], ["Municipio / vereda", p.muni || "—"],
+    ["Etapa", esLev ? "Levante (hasta la primera cosecha)" : "Zoca (renovación)"], [esLev ? "Fecha de siembra" : "Fecha de la zoca", p.fApp ? fechaLarga(p.fApp) : "—"],
+    ["Ingeniero asistente técnico", $("uNombre").value.trim() || "—"], ["Área · plantas", fmt(p.area, 2) + " ha · " + fmt(p.dens, 0) + " pl/ha · " + fmt(pl.plantas, 0) + " plantas"]];
+  html += '<div class="ficha">' + fi.map(x => "<div><small>" + x[0] + "</small><b>" + esc(x[1]) + "</b></div>").join("") + "</div>";
+  html += '<div class="banner aviso">Todos estos datos son <b>recomendaciones generales de Cenicafé</b> (' + esc(fuente) + "). No reemplazan el análisis de suelo.</div>";
+  if (proxima) html += '<div class="banner ok">Próxima aplicación: a los ' + proxima.mes + " meses, el " + proxima.fecha + ". Por planta: " + proxima.dosis + ".</div>";
+  else if (p.fApp) html += '<div class="banner ok">Con esa fecha ya pasaron todas las aplicaciones del plan. Desde ahora el cafetal sigue el plan de la etapa de producción.</div>';
+
+  html += '<div class="kpis">' +
+    '<div class="kpi"><small>Fertilizante por planta en todo el plan</small><b>' + fmt(pl.tot.total, 0) + " g</b></div>" +
+    '<div class="kpi"><small>Plantas del lote</small><b>' + fmt(pl.plantas, 0) + "</b></div>" +
+    '<div class="kpi"><small>Costo del lote en todo el plan</small><b>' + money(pl.costoLote) + "</b></div>" +
+    '<div class="kpi"><small>Costo por planta</small><b>' + money(pl.costoPlanta) + "</b></div></div>";
+
+  html += "<h3>Plan de fertilización por planta (g/planta)</h3><div class=\"tablewrap\"><table><tr><th>Aplicación</th>" + (p.fApp ? "<th>Fecha</th>" : "") + "<th>Urea</th><th>DAP</th><th>Cloruro de potasio</th>" + (esLev ? "<th>Óxido de Mg (aparte)</th>" : "") + "<th>Total g/planta</th></tr>";
+  pl.filas.forEach((f, i) => {
+    const d = v => v > 0 ? fmt(v, 1) : "—";
+    html += "<tr><td>A los " + f.mes + " meses</td>" + (p.fApp ? "<td style='text-align:left'>" + calFilas[i].fecha + "</td>" : "") + "<td>" + d(f.urea) + "</td><td>" + d(f.dap) + "</td><td>" + d(f.kcl) + "</td>" +
+      (esLev ? "<td>" + d(f.oxMg) + "</td>" : "") + "<td><b>" + fmt(f.total, 1) + "</b></td></tr>";
+  });
+  html += "<tr><th>Total del plan</th>" + (p.fApp ? "<th></th>" : "") + "<th>" + fmt(pl.tot.urea, 1) + "</th><th>" + fmt(pl.tot.dap, 1) + "</th><th>" + fmt(pl.tot.kcl, 1) + "</th>" + (esLev ? "<th>" + fmt(pl.tot.oxMg, 1) + "</th>" : "") + "<th>" + fmt(pl.tot.total, 1) + "</th></tr></table></div>";
+
+  html += "<h3>Compra para el lote (plan completo)</h3><div class=\"tablewrap\"><table><tr><th>Producto</th><th>g/planta</th><th>kg del lote</th><th>Bultos de 50 kg</th><th>Costo del lote</th></tr>";
+  pl.prods.forEach(x => { html += "<tr><td>" + esc(x.nombre) + "</td><td>" + fmt(x.gPlanta, 1) + "</td><td>" + fmt(x.kgLote, 1) + "</td><td>" + fmt(x.bultos, 1) + "</td><td>" + money(x.costo) + "</td></tr>"; });
+  html += "<tr><th>Total</th><th>" + fmt(pl.tot.total, 1) + "</th><th>" + fmt(pl.prods.reduce((a, x) => a + x.kgLote, 0), 1) + "</th><th>" + fmt(pl.prods.reduce((a, x) => a + x.bultos, 0), 1) + "</th><th>" + money(pl.costoLote) + "</th></tr></table></div>";
+
+  html += "<h3>Nutrientes aportados por planta (g)</h3><div class=\"tablewrap\"><table><tr><th>Nutriente</th>" + (esLev ? "<th>Tabla 1 de Cenicafé (18 meses)</th>" : "") + "<th>Aportado por los productos</th></tr>";
+  [["N", "N"], ["P2O5", "P₂O₅"], ["K2O", "K₂O"], ["MgO", "MgO"]].forEach(([k, etq]) => {
+    if (!esLev && k === "MgO") return;
+    html += "<tr><td>" + etq + "</td>" + (esLev ? "<td>" + (k === "MgO" && !p.mgs ? "—" : LEVANTE.nutr[k]) + "</td>" : "") + "<td>" + fmt(pl.tot[k], 1) + "</td></tr>";
+  });
+  html += "</table></div>";
+  if (esLev) html += '<p class="hint">Valores aproximados: las Tablas 1 y 2 del Avance Técnico 423 no coinciden exactamente.</p>';
+
+  if (calFilas.length) {
+    html += "<h3>Calendario de aplicaciones</h3><div class=\"tablewrap\"><table><tr><th>Aplicación</th><th>Fecha</th><th>Dosis por planta</th><th>Recordatorio</th></tr>";
+    calFilas.forEach(c => { html += "<tr><td>A los " + c.mes + " meses</td><td style='text-align:left'>" + c.fecha + "</td><td style='text-align:left'>" + esc(c.dosis) + "</td><td><a class=\"cal\" target=\"_blank\" rel=\"noopener\" href=\"" + urlCalendar(c.ev) + "\">+ Google Calendar</a></td></tr>"; });
+    html += "</table></div>";
+  }
+  if (esLev) {
+    html += "<h3>Mezclas sugeridas por Cenicafé (g/planta)</h3><div class=\"tablewrap\"><table><tr><th>Meses</th><th>Mezcla</th><th>Aparte</th></tr>" +
+      MEZCLAS_LEV.map(r => "<tr><td>" + r[0] + "</td><td style='text-align:left'>" + r[1] + "</td><td style='text-align:left'>" + r[2] + "</td></tr>").join("") + "</table></div>";
+    html += "<ul class='notas'>" + ALTERNAS_LEV.map(r => "<li><b>" + r[0] + ":</b> " + r[1] + "</li>").join("") + "</ul>";
+  }
+  if (esLev) html += htmlCompuestos({ comp: comp, p: p });
+  html += "<h3>Notas</h3><ul class='notas'>" + notas.map(x => "<li>" + x + "</li>").join("") + "</ul>";
+  out.innerHTML = html;
+
+  ultimo = { etapa: et, p: p, pl: pl, fuente: fuente, calFilas: calFilas, notas: notas, proxima: proxima, comp: comp };
+  resumenTexto = "FertiCafé – " + etNombre + " – " + (p.finca || "Finca") + (p.lote ? " – " + p.lote : "") + "\n" +
+    (p.fApp ? (esLev ? "Fecha de siembra: " : "Fecha de la zoca: ") + fechaLarga(p.fApp) + "\n" : "") +
+    fmt(p.area, 2) + " ha, " + fmt(p.dens, 0) + " plantas/ha (" + fmt(pl.plantas, 0) + " plantas).\n" +
+    "Plan por planta:\n" + pl.filas.map(f => "  - A los " + f.mes + " meses: " + descDosis(f)).join("\n") + "\n" +
+    "Costo del lote: " + money(pl.costoLote) + " (" + money(pl.costoPlanta) + " por planta).\n" +
+    (comp.length ? "Si no consigues simples, usa el compuesto " + comp[0].grado.nombre + " a los 10 y 18 meses.\n" : "") +
+    "Recomendaciones generales de Cenicafé: " + fuente + ". No reemplazan el análisis de suelo.\n" +
+    (calFilas.length ? "Calendario:\n" + calFilas.map(c => "  - " + c.fecha + ": " + c.dosis).join("\n") + "\n" : "");
+}
+
+function informePlan(u, autoImprimir) {
+  const p = u.p, pl = u.pl, esLev = u.etapa === "levante";
+  const prep = $("uNombre").value.trim();
+  const fila = (a, b, c, d) => "<tr><th>" + a + "</th><td>" + esc(b) + "</td><th>" + c + "</th><td>" + esc(d) + "</td></tr>";
+  let h = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FertiCafé – ' +
+    esc(p.finca || "informe") + "</title><style>" + INFORME_CSS + '</style></head><body><div class="hoja">';
+  h += '<div class="band">' + LOGO + "<div><h1>FertiCafé</h1><p>Informe de fertilización de café · " + (esLev ? "Etapa de levante" : "Zoca (renovación)") + "</p></div>" +
+    '<div class="der">Emitido el ' + fechaLarga(hoyISO()) + (prep ? "<br>Ingeniero asistente técnico " + esc(prep) : "") + '</div></div><div class="franja"></div><div class="cont">';
+  h += '<h2>Datos de la finca y el lote</h2><table class="ficha">' +
+    fila("Finca", p.finca || "—", "Lote", p.lote || "—") + fila("Propietario", p.prop || "—", "Municipio / vereda", p.muni || "—") +
+    fila("Etapa", esLev ? "Levante (hasta la primera cosecha)" : "Zoca (renovación)", esLev ? "Fecha de siembra" : "Fecha de la zoca", p.fApp ? fechaLarga(p.fApp) : "—") +
+    fila("Área", fmt(p.area, 2) + " ha", "Plantas por hectárea", fmt(p.dens, 0)) + fila("Plantas del lote", fmt(pl.plantas, 0), "Aplicaciones del plan", String(pl.filas.length)) + "</table>";
+  h += '<div class="aviso"><b>Aclaración:</b> todos estos datos son <b>recomendaciones generales de Cenicafé</b> (' + esc(u.fuente) + "). No reemplazan el análisis de suelo.</div>";
+  if (u.proxima) h += '<div class="rec"><b>Próxima aplicación:</b> a los ' + u.proxima.mes + " meses, el " + esc(u.proxima.fecha) + ". Por planta: " + esc(u.proxima.dosis) + ".</div>";
+  h += '<div class="tarjetas">' +
+    '<div class="tj t1"><small>Fertilizante por planta en el plan</small><b>' + fmt(pl.tot.total, 0) + " g</b></div>" +
+    '<div class="tj t2"><small>Plantas del lote</small><b>' + fmt(pl.plantas, 0) + "</b></div>" +
+    '<div class="tj t3"><small>Bultos de 50 kg (plan completo)</small><b>' + fmt(pl.prods.reduce((a, x) => a + x.bultos, 0), 1) + "</b></div>" +
+    '<div class="tj t4"><small>Costo del lote en el plan</small><b>' + money(pl.costoLote) + "</b></div></div>";
+
+  h += "<h2>Plan de fertilización por planta (g/planta)</h2><table><thead><tr><th>Aplicación</th>" + (u.calFilas.length ? "<th>Fecha</th>" : "") + "<th>Urea</th><th>DAP</th><th>Cloruro de potasio</th>" + (esLev ? "<th>Óxido de Mg (aparte)</th>" : "") + "<th>Total g/planta</th></tr></thead><tbody>";
+  pl.filas.forEach((f, i) => {
+    const d = v => v > 0 ? fmt(v, 1) : "—";
+    h += "<tr><td>A los " + f.mes + " meses</td>" + (u.calFilas.length ? '<td style="text-align:left">' + esc(u.calFilas[i].fecha) + "</td>" : "") + "<td>" + d(f.urea) + "</td><td>" + d(f.dap) + "</td><td>" + d(f.kcl) + "</td>" + (esLev ? "<td>" + d(f.oxMg) + "</td>" : "") + "<td><b>" + fmt(f.total, 1) + "</b></td></tr>";
+  });
+  h += '<tr class="tot"><td>Total del plan</td>' + (u.calFilas.length ? "<td></td>" : "") + "<td>" + fmt(pl.tot.urea, 1) + "</td><td>" + fmt(pl.tot.dap, 1) + "</td><td>" + fmt(pl.tot.kcl, 1) + "</td>" + (esLev ? "<td>" + fmt(pl.tot.oxMg, 1) + "</td>" : "") + "<td>" + fmt(pl.tot.total, 1) + "</td></tr></tbody></table>";
+
+  h += "<h2>Compra para el lote (plan completo)</h2><table><thead><tr><th>Producto</th><th>g/planta</th><th>kg del lote</th><th>Bultos de 50 kg</th><th>Precio por bulto</th><th>Costo del lote</th></tr></thead><tbody>";
+  pl.prods.forEach(x => { h += "<tr><td>" + esc(x.nombre) + "</td><td>" + fmt(x.gPlanta, 1) + "</td><td>" + fmt(x.kgLote, 1) + "</td><td>" + fmt(x.bultos, 1) + "</td><td>" + money(x.precio) + "</td><td>" + money(x.costo) + "</td></tr>"; });
+  h += '<tr class="tot"><td>Total</td><td>' + fmt(pl.tot.total, 1) + "</td><td>" + fmt(pl.prods.reduce((a, x) => a + x.kgLote, 0), 1) + "</td><td>" + fmt(pl.prods.reduce((a, x) => a + x.bultos, 0), 1) + "</td><td></td><td>" + money(pl.costoLote) + "</td></tr></tbody></table>";
+  h += '<p style="font-size:10.5px;color:#5b655e;margin:2px 0 0">Los precios por bulto son de ejemplo y se pueden cambiar en la app.</p>';
+
+  h += "<h2>Nutrientes aportados por planta (g)</h2><table><thead><tr><th>Nutriente</th>" + (esLev ? "<th>Tabla 1 de Cenicafé (18 meses)</th>" : "") + "<th>Aportado por los productos</th></tr></thead><tbody>";
+  [["N", "N"], ["P2O5", "P₂O₅"], ["K2O", "K₂O"], ["MgO", "MgO"]].forEach(([k, etq]) => {
+    if (!esLev && k === "MgO") return;
+    h += "<tr><td>" + etq + "</td>" + (esLev ? "<td>" + (k === "MgO" && !p.mgs ? "—" : LEVANTE.nutr[k]) + "</td>" : "") + "<td>" + fmt(pl.tot[k], 1) + "</td></tr>";
+  });
+  h += "</tbody></table>";
+
+  if (u.calFilas.length) {
+    h += "<h2>Calendario de aplicaciones</h2><table><thead><tr><th>Aplicación</th><th>Fecha</th><th>Dosis por planta</th></tr></thead><tbody>" +
+      u.calFilas.map(c => "<tr><td>A los " + c.mes + ' meses</td><td style="text-align:left">' + esc(c.fecha) + '</td><td style="text-align:left">' + esc(c.dosis) + "</td></tr>").join("") + "</tbody></table>";
+  }
+  if (esLev) {
+    h += "<h2>Mezclas de simples sugeridas por Cenicafé (Avance Técnico 423)</h2><table><thead><tr><th>Meses después de la siembra</th><th>Mezcla</th><th>Aplicar aparte</th></tr></thead><tbody>" +
+      MEZCLAS_LEV.map(r => "<tr><td>" + r[0] + '</td><td style="text-align:left">' + r[1] + '</td><td style="text-align:left">' + r[2] + "</td></tr>").join("") + "</tbody></table>" +
+      "<ul>" + ALTERNAS_LEV.map(r => "<li><b>" + r[0] + ":</b> " + r[1] + "</li>").join("") + "</ul>";
+  }
+  if (esLev) h += htmlCompuestos(u).replace(/<h3>/g, "<h2>").replace(/<\/h3>/g, "</h2>");
+  h += "<h2>Notas</h2><ul>" + u.notas.map(n => "<li>" + n + "</li>").join("") + "</ul>";
+  h += '</div><div class="pie">FertiCafé · Recomendaciones generales de Cenicafé. No reemplazan el análisis de suelo ni el apoyo técnico.</div></div>';
+  if (autoImprimir) h += '<script>window.addEventListener("load", function () { setTimeout(function () { try { window.print(); } catch (e) {} }, 500); });<\/script>';
+  return h + "</body></html>";
+}
+
+construirTablaGrados();
+$("fApp").value = hoyISO();
+
+let calculado = false;
+function ocultarResultados() {
+  calculado = false; ultimo = null; resumenTexto = ""; eventos = [];
+  $("resultados").hidden = true; $("salida").innerHTML = ""; $("copyMsg").textContent = "";
+}
+$("btnCalc").addEventListener("click", () => {
+  seleccion = null;
+  calculado = true;
+  $("resultados").hidden = false;
+  render();
+  try { $("resultados").scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+});
+document.querySelectorAll("input").forEach(i => i.addEventListener("input", () => { if (calculado) render(); }));
+$("salida").addEventListener("change", e => {
+  if (e.target && e.target.name === "sel") { seleccion = e.target.value; render(); }
+});
+// Logo propio: rama de café cargada de cerezas y una taza
+const LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Rama de café cargada y taza de café">' +
+  '<circle cx="60" cy="60" r="58" fill="#fffaf0" stroke="#d98e04" stroke-width="3"/>' +
+  '<path d="M14 44 C32 22 66 18 98 34" fill="none" stroke="#6b4226" stroke-width="4" stroke-linecap="round"/>' +
+  '<g fill="#3f7a4d"><path transform="translate(30 31) rotate(-70)" d="M0 0 C4 -9 14 -11 22 -6 C18 4 8 6 0 0Z"/>' +
+  '<path transform="translate(50 25) rotate(-60)" d="M0 0 C4 -9 14 -11 22 -6 C18 4 8 6 0 0Z" fill="#2f5d3a"/>' +
+  '<path transform="translate(71 25) rotate(-40)" d="M0 0 C4 -9 14 -11 22 -6 C18 4 8 6 0 0Z"/>' +
+  '<path transform="translate(86 29) rotate(-10)" d="M0 0 C4 -9 14 -11 22 -6 C18 4 8 6 0 0Z" fill="#2f5d3a"/></g>' +
+  '<g fill="#c0392b"><circle cx="36" cy="38" r="5.5"/><circle cx="45" cy="36" r="5.5" fill="#d64533"/><circle cx="41" cy="45" r="5.5"/>' +
+  '<circle cx="60" cy="32" r="5.5"/><circle cx="69" cy="33" r="5.5" fill="#d98e04"/><circle cx="64" cy="40" r="5.5" fill="#d64533"/>' +
+  '<circle cx="81" cy="36" r="5.5"/><circle cx="88" cy="39" r="5.5" fill="#d64533"/></g>' +
+  '<g fill="#fff" opacity=".75"><circle cx="34.5" cy="36.5" r="1.4"/><circle cx="43.5" cy="34.5" r="1.4"/><circle cx="39.5" cy="43.5" r="1.4"/>' +
+  '<circle cx="58.5" cy="30.5" r="1.4"/><circle cx="62.5" cy="38.5" r="1.4"/><circle cx="79.5" cy="34.5" r="1.4"/></g>' +
+  '<g fill="none" stroke="#b8a48c" stroke-width="2.5" stroke-linecap="round"><path d="M52 65 C48 61 56 59 52 54"/><path d="M63 65 C59 61 67 59 63 54"/></g>' +
+  '<ellipse cx="60" cy="101" rx="33" ry="6" fill="#6b4226"/>' +
+  '<path d="M84 76 C98 75 98 91 82 91" fill="none" stroke="#6b4226" stroke-width="4" stroke-linecap="round"/>' +
+  '<path d="M36 70 H84 V82 C84 94 74 100 60 100 C46 100 36 94 36 82 Z" fill="#ffffff" stroke="#6b4226" stroke-width="3" stroke-linejoin="round"/>' +
+  '<ellipse cx="60" cy="70" rx="24" ry="5" fill="#4a2c17" stroke="#6b4226" stroke-width="2.5"/></svg>';
+
+const INFORME_CSS = '@page{size:A4;margin:12mm}*{box-sizing:border-box}' +
+  'body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;color:#1f2a24;background:#f4f1ea;-webkit-print-color-adjust:exact;print-color-adjust:exact;line-height:1.4;font-size:13px}' +
+  '.hoja{max-width:900px;margin:0 auto;background:#fff}' +
+  '.band{background:linear-gradient(135deg,#2f5d3a,#3f7a4d);color:#fff;padding:16px 22px;display:flex;align-items:center;gap:16px}' +
+  '.band svg{width:78px;height:78px;flex:none}.band h1{margin:0;font-size:27px;letter-spacing:.3px}.band p{margin:2px 0 0;opacity:.92;font-size:13px}' +
+  '.band .der{margin-left:auto;text-align:right;font-size:12px}' +
+  '.franja{height:6px;background:linear-gradient(90deg,#c0392b 0 25%,#d98e04 25% 50%,#6b4226 50% 75%,#3f7a4d 75%)}' +
+  '.cont{padding:14px 22px 8px}h2{margin:18px 0 6px;font-size:15px;color:#2f5d3a;border-bottom:2px solid #d98e04;padding-bottom:3px}' +
+  'table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}' +
+  'th{background:#2f5d3a;color:#fff;padding:6px 7px;text-align:right;font-weight:600}th:first-child,td:first-child{text-align:left}' +
+  'td{padding:5px 7px;border-bottom:1px solid #e6dfd0;text-align:right}tbody tr:nth-child(even) td{background:#faf7f0}' +
+  'tr.mejor td{background:#e4f2e6!important;font-weight:700}tr.nocubre td:first-child{color:#b3261e}tr.tot td{background:#efe7d6!important;font-weight:700}' +
+  'table.comp td:first-child{width:30%}table.req td,table.req th{text-align:center}table.req td:first-child,table.req th:first-child{text-align:left}table.req td.sel{background:#fde9b0!important;font-weight:700;outline:2px solid #d98e04;outline-offset:-2px}table.req td.nada{color:#b3261e;font-weight:700}'+
+  'table.ficha th{background:#efe7d6;color:#6b4226;text-align:left;width:19%}table.ficha td{text-align:left;width:31%}' +
+  '.tarjetas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.tj{border-radius:10px;padding:9px 11px;color:#fff}' +
+  '.tj small{display:block;opacity:.92;font-size:10.5px}.tj b{font-size:16px}.t1{background:#2f5d3a}.t2{background:#6b4226}.t3{background:#c0392b}.t4{background:#d98e04}' +
+  '.rec{background:#e4f2e6;border-left:5px solid #2f5d3a;border-radius:6px;padding:9px 12px;margin:6px 0}.aviso{background:#fff4d9;border-left:5px solid #d98e04;border-radius:6px;padding:9px 12px;margin:6px 0}' +
+  '.barra{display:inline-block;width:64px;height:8px;background:#e6dfd0;border-radius:4px;vertical-align:middle;margin-right:6px;overflow:hidden}.barra i{display:block;height:100%;background:#3f7a4d}.barra i.baja{background:#c0392b}' +
+  'ul{margin:4px 0 0;padding-left:18px}li{margin:3px 0}.pie{background:#efe7d6;color:#6b4226;padding:9px 22px;font-size:11px;text-align:center;margin-top:12px}' +
+  'tr,.tj{break-inside:avoid}h2{break-after:avoid}@media print{body{background:#fff}.hoja{max-width:none}}';
+
+function construirInforme(autoImprimir) {
+  const u = ultimo;
+  if (u.etapa && u.etapa !== "produccion") return informePlan(u, autoImprimir);
+  const p = u.p, aj = u.aj;
+  const prep = $("uNombre").value.trim();
+  const fila = (a, b, c, d) => "<tr><th>" + a + "</th><td>" + esc(b) + "</td><th>" + c + "</th><td>" + esc(d) + "</td></tr>";
+  let h = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FertiCafé – ' +
+    esc(p.finca || "informe") + "</title><style>" + INFORME_CSS + '</style></head><body><div class="hoja">';
+  h += '<div class="band">' + LOGO + "<div><h1>FertiCafé</h1><p>Informe de fertilización de café sin análisis de suelo · Etapa de producción</p></div>" +
+    '<div class="der">Emitido el ' + fechaLarga(hoyISO()) + (prep ? "<br>Ingeniero asistente técnico " + esc(prep) : "") + '</div></div><div class="franja"></div><div class="cont">';
+
+  h += '<h2>Datos de la finca y el lote</h2><table class="ficha">' +
+    fila("Finca", p.finca || "—", "Lote", p.lote || "—") +
+    fila("Propietario", p.prop || "—", "Municipio / vereda", p.muni || "—") +
+    fila("Día de la aplicación", p.fApp ? fechaLarga(p.fApp) : "—", "Aplicaciones por año", String(p.apps)) +
+    fila("Área", fmt(p.area, 2) + " ha", "Plantas por hectárea", fmt(p.dens, 0)) +
+    fila("Sombrío", fmt(p.sombra, 0) + " %", "Incluye Mg y S", p.mgs ? "Sí" : "No") + "</table>";
+
+  h += '<div class="aviso"><b>Aclaración:</b> todos estos datos son <b>recomendaciones generales de Cenicafé</b> (Avance Técnico 424, criterio base para cafetales en producción). No reemplazan el análisis de suelo.</div>';
+  // Tablas de requerimientos base (Cenicafé) con el caso del lote resaltado
+  const colD = p.dens >= 7500 ? 0 : (p.dens >= 5000 ? 1 : 2);
+  const filaS = p.sombra > 55 ? 3 : (p.sombra > 45 ? 2 : (p.sombra >= 35 ? 1 : 0));
+  const T = [TABLA_REQ.alta, TABLA_REQ.media, TABLA_REQ.baja];
+  const celda = (txt, on) => '<td' + (on ? ' class="sel"' : "") + ">" + txt + "</td>";
+  h += "<h2>Requerimientos base de Cenicafé (kg/ha por año)</h2>" +
+    '<p style="margin:2px 0 6px;font-size:11.5px;color:#5b655e">Criterio base anual: 300 kg N/ha, 260 kg K₂O/ha y 50 kg/ha de P₂O₅, MgO y S, para 7.500–10.000 plantas/ha y menos de 35 % de sombra.</p>' +
+    "<p style='margin:6px 0 2px;font-weight:700;color:#6b4226'>1. Con menos de 35 % de sombra, según la densidad</p>" +
+    '<table class="req"><thead><tr><th>Nutriente</th><th>Más de 7.500 plantas/ha</th><th>5.000–7.500 plantas/ha</th><th>Menos de 5.000 plantas/ha</th></tr></thead><tbody>' +
+    [["N", "N"], ["K2O", "K₂O"], ["P2O5", "P₂O₅"], ["MgO", "MgO"], ["S", "S"]].map(([k, etq]) =>
+      "<tr><td>" + etq + "</td>" + T.map((t, i) => celda(t[k], filaS === 0 && colD === i)).join("") + "</tr>").join("") + "</tbody></table>" +
+    "<p style='margin:10px 0 2px;font-weight:700;color:#6b4226'>2. Ajuste según sombrío y densidad (% del criterio base)</p>" +
+    '<table class="req"><thead><tr><th>Sombrío</th><th>Más de 7.500 plantas/ha</th><th>5.000–7.500 plantas/ha</th><th>Menos de 5.000 plantas/ha</th></tr></thead><tbody>' +
+    "<tr><td>Menos de 35 %</td>" + celda("100 %", filaS === 0 && colD === 0) + celda("95 %", filaS === 0 && colD === 1) + celda("85 %", filaS === 0 && colD === 2) + "</tr>" +
+    "<tr><td>35–45 %</td>" + celda("85 % *", filaS === 1 && colD === 0) + celda("85 %", filaS === 1 && colD === 1) + celda("75 %", filaS === 1 && colD === 2) + "</tr>" +
+    "<tr><td>45–55 %</td>" + celda("50 %", filaS === 2 && colD === 0) + celda("50 %", filaS === 2 && colD === 1) + celda("50 %", filaS === 2 && colD === 2) + "</tr>" +
+    '<tr><td>Más de 55 %</td><td colspan="3" class="nada' + (filaS === 3 ? " sel" : "") + '">No se justifica fertilizar por la baja producción esperada</td></tr></tbody></table>' +
+    '<p style="font-size:10.5px;color:#5b655e;margin:4px 0 0">Resaltado en amarillo: el caso de este lote. * La tabla de Cenicafé no trae este caso (35–45 % de sombra con más de 7.500 plantas/ha); se usó 85 %. Fuente: Cenicafé, Avance Técnico No. 424.</p>';
+
+  h += "<h2>Criterio aplicado</h2>";
+  if (u.cero) {
+    h += '<div class="aviso"><b>No se justifica fertilizar.</b> ' + esc(aj.regla) + " La dosis recomendada es 0 kg/ha. Antes de invertir en fertilizante conviene regular el sombrío a 30–40 %.</div>";
+  } else {
+    const sel = u.sel, mejor = u.mejor;
+    h += '<div class="rec">' + (aj.tabla ? "" : "Factor de ajuste: " + Math.round(aj.f * 100) + " %. ") + esc(aj.regla) + "</div>";
+
+    h += "<h2>Recomendación</h2>" + '<div class="' + (u.recOk ? "rec" : "aviso") + '">' + u.recTxt + "</div>";
+    const gm = sel.prods[0];
+    h += '<div class="tarjetas">' +
+      '<div class="tj t1"><small>Fertilizante principal</small><b>' + esc(gm ? gm.nombre.replace(" (complemento)", "") : "—") + "</b></div>" +
+      '<div class="tj t2"><small>Bultos de 50 kg para el lote</small><b>' + fmt(principal(sel) * p.area / 50, 1) + "</b></div>" +
+      '<div class="tj t3"><small>Gramos por planta por aplicación</small><b>' + fmt(sel.mezclaGAplic, 0) + " g</b></div>" +
+      '<div class="tj t4"><small>Costo del lote por año</small><b>' + money(sel.costoLote) + "</b></div></div>";
+
+    h += "<h2>Comparación de opciones</h2><table class='comp'><thead><tr><th>Opción</th><th>Principal kg/ha</th><th>Bultos 50 kg/ha</th><th>Complementos kg/ha</th><th>Cubre (mín.)</th><th>Costo/ha</th><th>Costo del lote</th><th>Frente a la mejor</th></tr></thead><tbody>";
+    const mostrar = u.cmp.opciones.filter(o => o.ok || o.tipo === "simples" || o === mejor);
+    mostrar.forEach(o => {
+      const ref = p.soloGrados && p.grados.length && o.tipo === "simples" ? " (referencia)" : "";
+      h += '<tr class="' + (o === mejor ? "mejor" : "") + (o.ok ? "" : " nocubre") + '"><td>' + esc(o.nombre) + (o === mejor ? " ★" : "") + ref + (o.ok ? "" : " – no cubre") + "</td><td>" +
+        fmt(principal(o), 0) + "</td><td>" + fmt(principal(o) / 50, 1) + "</td><td>" + fmt(o.kgHaTotal - principal(o), 0) + "</td><td>" + Math.round(o.minCob * 100) + " %</td><td>" +
+        money(o.costoHa) + "</td><td>" + money(o.costoLote) + "</td><td>" + (o === mejor ? "—" : "+" + money(o.costoLote - mejor.costoLote)) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    h += '<p style="font-size:11px;color:#5b655e;margin:2px 0 0">Se muestran las opciones que cubren al menos el ' + Math.round(COBERTURA_MIN * 100) + ' % de los nutrientes requeridos, y la mezcla de simples como referencia. ★ = opción recomendada.</p>';
+
+    h += "<h2>Nutrientes (kg/ha por año) – " + esc(sel.nombre) + "</h2><table><thead><tr><th>Nutriente</th><th>Criterio base</th><th>Requerido para el lote</th><th>Aportado</th><th>Cobertura</th></tr></thead><tbody>";
+    [["N", "N"], ["P2O5", "P₂O₅"], ["K2O", "K₂O"], ["MgO", "MgO"], ["S", "S"]].forEach(([k, etq]) => {
+      const act = sel.req[k] > 0, pct = Math.round(sel.cobertura[k] * 100);
+      h += "<tr><td>" + etq + "</td><td>" + BASE[k] + "</td><td>" + (act ? fmt(sel.req[k]) : "—") + "</td><td>" + (act || sel.aporte[k] > 0 ? fmt(sel.aporte[k]) : "—") + "</td><td>" +
+        (act ? '<span class="barra"><i class="' + (pct < 95 ? "baja" : "") + '" style="width:' + Math.min(100, pct) + '%"></i></span>' + pct + " %" : "—") + "</td></tr>";
+    });
+    h += "</tbody></table>";
+
+    h += "<h2>Productos a comprar y aplicar</h2><table><thead><tr><th>Producto</th><th>kg/ha</th><th>kg del lote</th><th>Bultos 50 kg</th><th>g/planta/año</th><th>g/planta/aplicación</th><th>Costo del lote</th></tr></thead><tbody>";
+    sel.prods.forEach(x => {
+      h += "<tr><td>" + esc(x.nombre) + "</td><td>" + fmt(x.kgHa) + "</td><td>" + fmt(x.kgLote) + "</td><td>" + fmt(x.bultos) + "</td><td>" + fmt(x.gPlanta) + "</td><td>" + fmt(x.gAplic) + "</td><td>" + money(x.costoLote) + "</td></tr>";
+    });
+    h += '<tr class="tot"><td>Total</td><td>' + fmt(sel.kgHaTotal) + "</td><td>" + fmt(sel.kgHaTotal * p.area) + "</td><td>" + fmt(sel.kgHaTotal * p.area / 50) + "</td><td></td><td></td><td>" + money(sel.costoLote) + "</td></tr></tbody></table>";
+
+    if (u.calFilas.length) {
+      h += "<h2>Calendario de aplicaciones</h2><table><thead><tr><th>Aplicación</th><th style='text-align:left'>Día</th><th>Mezcla g/planta</th><th>Kieserita g/planta (aparte)</th></tr></thead><tbody>" +
+        u.calFilas.map(c => "<tr><td>" + c.n + '</td><td style="text-align:left">' + esc(c.fecha) + "</td><td>" + c.mezcla + "</td><td>" + c.kie + "</td></tr>").join("") + "</tbody></table>";
+    }
+    if (u.ahorro > 0) h += '<div class="rec">Ajustar por densidad y sombrío ahorra <b>' + money(u.ahorro) + "</b> en este lote frente a aplicar el criterio base completo.</div>";
+    h += "<h2>Notas</h2><ul>" + u.notas.map(n => "<li>" + n + "</li>").join("") + "</ul>";
+  }
+  h += '</div><div class="pie">FertiCafé · Referencia general basada en el criterio base de Cenicafé (Avance Técnico 424). Con análisis de suelo, la recomendación se ajusta a las necesidades reales del lote.</div></div>';
+  if (autoImprimir) h += '<script>window.addEventListener("load", function () { setTimeout(function () { try { window.print(); } catch (e) {} }, 500); });<\/script>';
+  return h + "</body></html>";
+}
+
+function descargarInforme() {
+  const msg = $("copyMsg");
+  if (!ultimo) { msg.textContent = "Primero corrige los datos."; return; }
+  const finca = $("finca").value.trim() || "Finca";
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([construirInforme(true)], { type: "text/html;charset=utf-8" }));
+  a.download = "informe-ferticafe-" + finca.replace(/[^\w\-]+/g, "_") + ".html";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  msg.textContent = "Informe descargado. Ábrelo en Chrome o Edge: se abre la ventana de impresión (Guardar como PDF).";
+}
+function imprimirInforme() {
+  const msg = $("copyMsg");
+  if (!ultimo) { msg.textContent = "Primero corrige los datos."; return; }
+  try {
+    const f = document.createElement("iframe");
+    f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0";
+    f.onload = () => {
+      try { f.contentWindow.focus(); f.contentWindow.print(); msg.textContent = "Si no se abrió la ventana de impresión, usa «Descargar informe» y ábrelo en tu navegador."; }
+      catch (e) { descargarInforme(); }
+      setTimeout(() => f.remove(), 60000);
+    };
+    document.body.appendChild(f);
+    f.srcdoc = construirInforme(false);
+  } catch (e) { descargarInforme(); }
+}
+$("btnPrint").addEventListener("click", imprimirInforme);
+$("btnInforme").addEventListener("click", descargarInforme);
+$("logoHdr").innerHTML = LOGO;
+$("logoPerfil").innerHTML = LOGO;
+$("btnCopy").addEventListener("click", () => {
+  const msg = $("copyMsg");
+  if (!resumenTexto) { msg.textContent = "Primero corrige los datos."; return; }
+  const ok = () => { msg.textContent = "Resumen copiado."; };
+  const fallo = () => { msg.textContent = "No se pudo copiar; selecciona el texto a mano."; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(resumenTexto).then(ok, fallo); else fallo();
+});
+
+//#CAL-START
+const pad2 = n => String(n).padStart(2, "0");
+const ymd = d => d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate());
+const diaSiguiente = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+function urlCalendar(ev) {
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(ev.titulo) +
+    "&dates=" + ymd(ev.fecha) + "/" + ymd(diaSiguiente(ev.fecha)) + "&details=" + encodeURIComponent(ev.detalle);
+}
+const icsEsc = t => String(t).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+const icsLinea = l => (l.length > 73 ? l.match(/.{1,73}/g).join("\r\n ") : l);
+function icsTexto(evs) {
+  const sello = new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//FertiCafe//ES", "CALSCALE:GREGORIAN", "METHOD:PUBLISH"];
+  evs.forEach((ev, i) => {
+    L.push("BEGIN:VEVENT", "UID:ferticafe-" + sello + "-" + i + "@ferticafe.local", "DTSTAMP:" + sello,
+      "DTSTART;VALUE=DATE:" + ymd(ev.fecha), "DTEND;VALUE=DATE:" + ymd(diaSiguiente(ev.fecha)),
+      "SUMMARY:" + icsEsc(ev.titulo), "DESCRIPTION:" + icsEsc(ev.detalle),
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(ev.titulo), "TRIGGER:-PT15H", "END:VALARM",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(ev.titulo), "TRIGGER:PT9H", "END:VALARM",
+      "END:VEVENT");
+  });
+  L.push("END:VCALENDAR");
+  return L.map(icsLinea).join("\r\n");
+}
+//#CAL-END
+
+const LS_PERFIL = "ferticafe.perfil", LS_LOTES = "ferticafe.lotes";
+function lsGet(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+const correoValido = t => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
+const camposLote = () => Array.from(document.querySelectorAll("#panelDatos input")).filter(i => i.id && !i.dataset.perfil);
+
+function pintarLotes() {
+  const l = lsGet(LS_LOTES, []);
+  $("listaLotes").innerHTML = l.length
+    ? l.map((x, i) => "<li><span>" + esc(x.nombre) + ' <span class="hint">' + esc(x.guardado || "") + '</span></span><span><button class="sec" data-act="cargar" data-i="' + i + '">Cargar</button> <button class="sec" data-act="borrar" data-i="' + i + '">Borrar</button></span></li>').join("")
+    : '<li><span class="hint">Aún no has guardado lotes.</span></li>';
+}
+function cargarPerfil() {
+  const pf = lsGet(LS_PERFIL, {});
+  $("uNombre").value = pf.nombre || "";
+  $("uCorreo").value = pf.correo || "";
+}
+function pintarAvatar() {
+  const t = $("uNombre").value.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(x => x[0].toUpperCase()).join("");
+  $("avatar").textContent = t || "☕";
+}
+$("uNombre").addEventListener("input", pintarAvatar);
+
+$("btnPerfil").addEventListener("click", () => {
+  const nombre = $("uNombre").value.trim(), correo = $("uCorreo").value.trim(), m = $("perfilMsg");
+  if (correo && !correoValido(correo)) { m.textContent = "El correo no parece válido."; return; }
+  m.textContent = lsSet(LS_PERFIL, { nombre: nombre, correo: correo }) ? "Perfil guardado en este navegador." : "No se pudo guardar: el navegador bloquea el almacenamiento.";
+  pintarAvatar();
+  if (calculado) render();
+});
+$("btnGuardarLote").addEventListener("click", () => {
+  const nombre = ($("finca").value.trim() || "Finca") + ($("lote").value.trim() ? " – " + $("lote").value.trim() : "");
+  const valores = {};
+  camposLote().forEach(i => { valores[i.id] = (i.type === "checkbox" || i.type === "radio") ? i.checked : i.value; });
+  let l = lsGet(LS_LOTES, []).filter(x => x.nombre !== nombre);
+  l.unshift({ nombre: nombre, guardado: hoyISO(), valores: valores });
+  l = l.slice(0, 20);
+  $("perfilMsg").textContent = lsSet(LS_LOTES, l) ? "Lote «" + nombre + "» guardado en este navegador." : "No se pudo guardar: el navegador bloquea el almacenamiento.";
+  pintarLotes();
+});
+$("listaLotes").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const l = lsGet(LS_LOTES, []), i = Number(b.dataset.i);
+  if (!l[i]) return;
+  if (b.dataset.act === "cargar") {
+    camposLote().forEach(c => {
+      if (Object.prototype.hasOwnProperty.call(l[i].valores, c.id)) {
+        if (c.type === "checkbox" || c.type === "radio") c.checked = !!l[i].valores[c.id]; else c.value = l[i].valores[c.id];
+      }
+    });
+    seleccion = null;
+    aplicarEtapa();
+    ocultarResultados();
+  } else if (b.dataset.act === "borrar") {
+    l.splice(i, 1);
+    lsSet(LS_LOTES, l);
+    pintarLotes();
+  }
+});
+
+$("btnIcs").addEventListener("click", () => {
+  const msg = $("copyMsg");
+  if (!eventos.length) { msg.textContent = "Escribe la fecha de la primera aplicación para armar el calendario."; return; }
+  const blob = new Blob([icsTexto(eventos)], { type: "text/calendar;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ferticafe-aplicaciones.ics";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  msg.textContent = "Descargado. Ábrelo para importarlo a Google Calendar (trae recordatorios).";
+});
+$("btnGmail").addEventListener("click", () => {
+  const msg = $("copyMsg");
+  if (!resumenTexto) { msg.textContent = "Primero corrige los datos."; return; }
+  const correo = $("uCorreo").value.trim(), nombre = $("uNombre").value.trim();
+  if (correo && !correoValido(correo)) { msg.textContent = "Revisa tu correo en Mi perfil."; return; }
+  let cuerpo = (nombre ? "Hola " + nombre + ",\n\n" : "") + resumenTexto;
+  if (cuerpo.length > 1800) cuerpo = cuerpo.slice(0, 1800) + "…";
+  const url = "https://mail.google.com/mail/?view=cm&fs=1" + (correo ? "&to=" + encodeURIComponent(correo) : "") +
+    "&su=" + encodeURIComponent("FertiCafé – recomendación " + ($("finca").value.trim() || "de fertilización")) + "&body=" + encodeURIComponent(cuerpo);
+  window.open(url, "_blank", "noopener");
+  msg.textContent = "Se abrió Gmail con el resumen; revísalo y envíalo.";
+});
+
+document.querySelectorAll('input[name="etapa"]').forEach(r => r.addEventListener("change", () => { seleccion = null; aplicarEtapa(); ocultarResultados(); }));
+cargarPerfil();
+pintarLotes();
+aplicarEtapa();
+pintarAvatar();
+</script>
+</body>
+</html>
